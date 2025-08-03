@@ -22,8 +22,8 @@ const navigationLinks = [
 
 export default function Navbar() {
   return (
-    <header className="border-b px-4 bg-green-300">
-      <div className="flex h-16 items-center justify-between gap-4 container mx-auto">
+    <header className="border-b bg-green-300">
+      <div className="flex h-16 px-4 items-center justify-between gap-4 container mx-auto">
         {/* Left side */}
         <div className="flex items-center gap-2">
           {/* Mobile menu trigger */}

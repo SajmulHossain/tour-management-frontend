@@ -1,14 +1,14 @@
 import type { ReactNode } from "react";
-import Navbar from "./Navbar";
 import Footer from "./Footer";
+import Navbar from "./Navbar";
 
 const CommonLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <main>{children}</main>
+      <main className="grow">{children}</main>
       <Footer />
-    </>
+    </div>
   );
 };
 
