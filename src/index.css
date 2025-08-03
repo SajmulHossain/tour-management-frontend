@@ -118,3 +118,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* @layer components {
+  .section {
+    @apply mx-auto max-w-screen-xl ;
+  }
+} */
