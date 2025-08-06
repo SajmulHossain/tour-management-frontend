@@ -11,16 +11,17 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { ModeToggler } from "./ModeToggler"
 import { Link } from "react-router"
+import { ModeToggler } from "./ModeToggler"
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
-  { href: "/", label: "Home", },
+  { href: "/", label: "Home" },
   { href: "/about", label: "About" },
 ]
 
 export default function Navbar() {
+  
   return (
     <header className="border-b">
       <div className="flex h-16 px-4 items-center justify-between gap-4 container mx-auto">
@@ -66,8 +67,8 @@ export default function Navbar() {
                 <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
                   {navigationLinks.map((link, index) => (
                     <NavigationMenuItem key={index} className="w-full">
-                      <NavigationMenuLink href={link.href} className="py-1.5">
-                        {link.label}
+                      <NavigationMenuLink asChild className="py-1.5">
+                        <Link to={link.href}>{link.label}</Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>
                   ))}
@@ -85,7 +86,10 @@ export default function Navbar() {
               <NavigationMenuList className="gap-2">
                 {navigationLinks.map((link, index) => (
                   <NavigationMenuItem key={index}>
-                    <NavigationMenuLink asChild className="text-muted-foreground hover:text-primary py-1.5 font-medium">
+                    <NavigationMenuLink
+                      asChild
+                      className="text-muted-foreground hover:text-primary py-1.5 font-medium"
+                    >
                       <Link to={link.href}>{link.label}</Link>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
@@ -101,7 +105,7 @@ export default function Navbar() {
             <a href="#">Sign In</a>
           </Button>
           <Button asChild className="text-sm text-white">
-            <Link to='/login'>Login</Link>
+            <Link to="/login">Login</Link>
           </Button>
         </div>
       </div>
