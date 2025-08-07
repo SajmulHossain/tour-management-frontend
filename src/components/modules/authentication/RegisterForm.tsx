@@ -9,7 +9,34 @@ import { Link } from "react-router";
 import { z } from "zod";
 
 const formSchema = z.object({
-  name: z.string().min(2).max(50),
+  name: z.string().min(2, {
+    error: 'Name should atleast 2 characters'
+  }).max(50),
+  email: z.email(),
+  password: z
+    .string({ error: "Password must be string" })
+    .min(8, { message: "Password must be at least 8 characters long." })
+    .regex(/^(?=.*[A-Z])/, {
+      message: "Password must contain at least 1 uppercase letter.",
+    })
+    .regex(/^(?=.*[!@#$%^&*])/, {
+      message: "Password must contain at least 1 special character.",
+    })
+    .regex(/^(?=.*\d)/, {
+      message: "Password must contain at least 1 number.",
+    }),
+  confirmPassword: z
+    .string({ error: "Password must be string" })
+    .min(8, { message: "Password must be at least 8 characters long." })
+    .regex(/^(?=.*[A-Z])/, {
+      message: "Password must contain at least 1 uppercase letter.",
+    })
+    .regex(/^(?=.*[!@#$%^&*])/, {
+      message: "Password must contain at least 1 special character.",
+    })
+    .regex(/^(?=.*\d)/, {
+      message: "Password must contain at least 1 number.",
+    }),
 });
 
 const RegisterForm = ({ className, ...props }: HtmlHTMLAttributes<HTMLDivElement>) => {
@@ -17,6 +44,9 @@ const RegisterForm = ({ className, ...props }: HtmlHTMLAttributes<HTMLDivElement
       resolver: zodResolver(formSchema),
       defaultValues: {
         name: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
       }
     });
 
@@ -35,15 +65,15 @@ const RegisterForm = ({ className, ...props }: HtmlHTMLAttributes<HTMLDivElement
 
         <div className="grid gap-6">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmit)}>
+            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Username</FormLabel>
+                    <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="shadcn" {...field} />
+                      <Input placeholder="John Doe" {...field} />
                     </FormControl>
                     <FormDescription className="sr-only">
                       This is your public display name.
@@ -52,6 +82,56 @@ const RegisterForm = ({ className, ...props }: HtmlHTMLAttributes<HTMLDivElement
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="JohnDoe@company.com" {...field} />
+                    </FormControl>
+                    <FormDescription className="sr-only">
+                      This is your public display name.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input placeholder="********" {...field} />
+                    </FormControl>
+                    <FormDescription className="sr-only">
+                      This is your public display name.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="********" {...field} />
+                    </FormControl>
+                    <FormDescription className="sr-only">
+                      This is your public display name.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button type="submit" className="w-full">Register</Button>
             </form>
           </Form>
 
