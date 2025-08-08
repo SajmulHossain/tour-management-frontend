@@ -4,6 +4,7 @@ import RegisterForm from '@/components/modules/authentication/RegisterForm';
 import { Link } from 'react-router';
 
 const Register = () => {
+  
     return (
       <div className="grid min-h-svh lg:grid-cols-2">
         <div className="relative hidden bg-muted lg:block">
