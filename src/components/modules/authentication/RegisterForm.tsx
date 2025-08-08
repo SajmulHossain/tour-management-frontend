@@ -81,7 +81,9 @@ const RegisterForm = ({
       const { name, email, password } = data;
      const result = await register({ name, email, password }).unwrap();
      toast.success(result.message);
-     navigate('/verify');
+     navigate('/verify', {
+      state: result.data.email
+     });
      console.log(result);
     } catch (error: any) {
       toast.error(error.data.message);

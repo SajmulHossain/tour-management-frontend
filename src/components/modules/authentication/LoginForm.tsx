@@ -58,7 +58,9 @@ const LoginForm = ({
       toast.success(response.message);
     } catch (error: any) {
       if (error.data.message === "User is not verified") {
-        navigate("/verify");
+        navigate("/verify", {
+          state: data.email
+        });
       }
       console.log(error);
       toast.error(error.data.message);
