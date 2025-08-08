@@ -2,7 +2,7 @@ import { envVars } from '@/config/env.config';
 import axios from 'axios';
 
 export const axiosInstance = axios.create({
-    baseURL: envVars.baseUrl,
+    baseURL: import.meta.env.PROD ? envVars.prodUrl : envVars.baseUrl,
 })
 
 axiosInstance.interceptors.request.use(function(config) {
