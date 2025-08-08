@@ -21,7 +21,10 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { useSendOTPMutation } from "@/redux/features/auth/auth.api";
+import {
+  useSendOTPMutation,
+  useVerifyOTPMutation,
+} from "@/redux/features/auth/auth.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -41,6 +44,7 @@ const Verify = () => {
   // const navigate = useNavigate();
 
   const [sendOtp] = useSendOTPMutation();
+  const [verifyOTP] = useVerifyOTPMutation();
 
   const form = useForm<z.infer<typeof OTPSchema>>({
     resolver: zodResolver(OTPSchema),
@@ -49,8 +53,17 @@ const Verify = () => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof OTPSchema>) => {
-    console.log(data);
+  const onSubmit = async (data: z.infer<typeof OTPSchema>) => {
+    const toastId = toast.loading("Verifying OTP");
+    try {
+      const res = await verifyOTP({ email: state, otp: data.pin }).unwrap();
+      toast.success("OTP Verified", { id: toastId });
+      console.log(res);
+    } catch (error: any) {
+      toast.error(error.data.message || "Failed to verify OTP", {
+        id: toastId,
+      });
+    }
   };
 
   const handleConfirm = async () => {
@@ -60,7 +73,7 @@ const Verify = () => {
       toast.success("OTP Sent", { id: toastId });
       setConfirm(true);
     } catch (error: any) {
-      toast.error(error.data.message || 'Failed to sent otp', { id: toastId });
+      toast.error(error.data.message || "Failed to sent otp", { id: toastId });
     }
   };
 

@@ -55,14 +55,13 @@ const LoginForm = ({
     try {
       const response = await login(data).unwrap();
       console.log(response);
-      toast.success(response.message);
+      toast.success(response?.message || 'Login Successfull');
     } catch (error: any) {
       if (error.data.message === "User is not verified") {
         navigate("/verify", {
           state: data.email
         });
       }
-      console.log(error);
       toast.error(error.data.message);
     }
   };
