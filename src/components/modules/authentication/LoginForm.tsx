@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -11,11 +12,13 @@ import {
 import { Input } from "@/components/ui/input";
 import PasswordInput from "@/components/ui/PasswordInput";
 import { cn } from "@/lib/utils";
+import { useLoginMutation } from "@/redux/features/auth/auth.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { HtmlHTMLAttributes } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
-import z from 'zod';
+import { Link, useNavigate } from "react-router";
+import { toast } from "sonner";
+import z from "zod";
 
 const loginSchema = z.object({
   email: z.email(),
@@ -37,17 +40,30 @@ const LoginForm = ({
   className,
   ...props
 }: HtmlHTMLAttributes<HTMLDivElement>) => {
+  const [login] = useLoginMutation();
+  const navigate = useNavigate();
+
   const form = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: '',
-      password: ''
-    }
+      email: "",
+      password: "",
+    },
   });
 
-  const handleLogin = (data: z.infer<typeof loginSchema>) => {
-    console.log(data);
-  }
+  const handleLogin = async (data: z.infer<typeof loginSchema>) => {
+    try {
+      const response = await login(data).unwrap();
+      console.log(response);
+      toast.success(response.message);
+    } catch (error: any) {
+      if (error.data.message === "User is not verified") {
+        navigate("/verify");
+      }
+      console.log(error);
+      toast.error(error.data.message);
+    }
+  };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -94,7 +110,9 @@ const LoginForm = ({
               )}
             />
 
-            <Button type="submit" className="w-full">Login</Button>
+            <Button type="submit" className="w-full">
+              Login
+            </Button>
           </form>
         </Form>
 

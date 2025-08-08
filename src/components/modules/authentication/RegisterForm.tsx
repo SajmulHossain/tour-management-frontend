@@ -16,7 +16,7 @@ import { useRegisterMutation } from "@/redux/features/auth/auth.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { HtmlHTMLAttributes } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -64,6 +64,7 @@ const RegisterForm = ({
   ...props
 }: HtmlHTMLAttributes<HTMLDivElement>) => {
   const [register] = useRegisterMutation();
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
@@ -80,6 +81,7 @@ const RegisterForm = ({
       const { name, email, password } = data;
      const result = await register({ name, email, password }).unwrap();
      toast.success(result.message);
+     navigate('/verify');
      console.log(result);
     } catch (error: any) {
       toast.error(error.data.message);
