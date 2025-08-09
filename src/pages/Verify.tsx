@@ -11,6 +11,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,12 +22,13 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { cn } from "@/lib/utils";
 import {
   useSendOTPMutation,
   useVerifyOTPMutation,
 } from "@/redux/features/auth/auth.api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation } from "react-router";
 import { toast } from "sonner";
@@ -41,6 +43,7 @@ const OTPSchema = z.object({
 const Verify = () => {
   const [confirm, setConfirm] = useState(false);
   const { state } = useLocation();
+  const [timer, setTimer] = useState(120);
   // const navigate = useNavigate();
 
   const [sendOtp] = useSendOTPMutation();
@@ -66,12 +69,13 @@ const Verify = () => {
     }
   };
 
-  const handleConfirm = async () => {
+  const handleSendOTP = async () => {
     const toastId = toast.loading("Sending OTP");
     try {
       await sendOtp({ email: state }).unwrap();
       toast.success("OTP Sent", { id: toastId });
       setConfirm(true);
+      setTimer(120)
     } catch (error: any) {
       toast.error(error.data.message || "Failed to sent otp", { id: toastId });
     }
@@ -82,6 +86,21 @@ const Verify = () => {
   //     navigate(-1);
   //   }
   // }, [navigate, state]);
+
+  useEffect(() => {
+    if(!state || !confirm) {
+      return;
+    }
+    
+    const timerId = setInterval(() => {
+      // if(state && confirm) {
+        setTimer(prev => prev > 0 ? prev - 1 : 0);
+        console.log('tick');
+      // }
+    }, 1000);
+
+    return () => clearInterval(timerId);
+  }, [confirm, state])
 
   return (
     <section className="min-h-screen place-items-center grid">
@@ -128,6 +147,12 @@ const Verify = () => {
                           </InputOTPGroup>
                         </InputOTP>
                       </FormControl>
+                      <FormDescription>
+                        <Button type="button" disabled={timer !== 0} onClick={handleSendOTP} variant={"link"} className={cn("p-0 h-0", {
+                          'hidden' : timer !== 0
+                        })}>Resend OTP</Button>
+                       {" "}{timer > 0?  <span>Resend OTP in {timer.toString().padStart(2,"0")}</span> : ""}
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -150,7 +175,7 @@ const Verify = () => {
             </CardDescription>
           </CardHeader>
           <CardFooter className="flex-col gap-2">
-            <Button onClick={handleConfirm} className="w-full">
+            <Button onClick={handleSendOTP} className="w-full">
               Submit
             </Button>
           </CardFooter>
