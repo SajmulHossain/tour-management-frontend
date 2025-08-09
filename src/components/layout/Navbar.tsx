@@ -1,31 +1,38 @@
-import Logo from "@/assets/icons/Logo"
-import { Button } from "@/components/ui/button"
+import Logo from "@/assets/icons/Logo";
+import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-} from "@/components/ui/navigation-menu"
+} from "@/components/ui/navigation-menu";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { Link } from "react-router"
-import { ModeToggler } from "./ModeToggler"
-import { useGetMeQuery } from "@/redux/features/auth/auth.api"
+} from "@/components/ui/popover";
+import { Link } from "react-router";
+import { ModeToggler } from "./ModeToggler";
+import {
+  useGetMeQuery,
+  useLogoutMutation,
+} from "@/redux/features/auth/auth.api";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
-]
+];
 
 export default function Navbar() {
+  const [logout] = useLogoutMutation();
 
-  const {data} = useGetMeQuery(undefined);
-  console.log(data);
-  
+  const { data } = useGetMeQuery(undefined);
+
+  const handleLogout = () => {
+    logout(null);
+  };
+
   return (
     <header className="border-b">
       <div className="flex h-16 px-4 items-center justify-between gap-4 container mx-auto">
@@ -105,12 +112,20 @@ export default function Navbar() {
         {/* Right side */}
         <div className="flex items-center gap-2">
           <ModeToggler />
-          <Button asChild variant="ghost" size="sm" className="text-sm">
-            <Link to='/register'>Register</Link>
-          </Button>
-          <Button asChild className="text-sm text-white">
-            <Link to="/login">Login</Link>
-          </Button>
+          {!data?.data?.email ? (
+            <>
+              <Button asChild variant="ghost" size="sm" className="text-sm">
+                <Link to="/register">Register</Link>
+              </Button>
+              <Button asChild className="text-sm text-white">
+                <Link to="/login">Login</Link>
+              </Button>
+            </>
+          ) : (
+            <Button onClick={handleLogout} variant={"outline"}>
+              Logout
+            </Button>
+          )}
         </div>
       </div>
     </header>

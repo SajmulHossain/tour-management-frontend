@@ -19,6 +19,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 import z from "zod";
+import LoginWithGoogle from "./LoginWithGoogle";
 
 const loginSchema = z.object({
   email: z.email(),
@@ -124,13 +125,7 @@ const LoginForm = ({
           </span>
         </div>
 
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full cursor-pointer"
-        >
-          Login with Google
-        </Button>
+        <LoginWithGoogle />
       </div>
       <div className="text-center text-sm">
         Don&apos;t have an account?{" "}

@@ -19,6 +19,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { z } from "zod";
+import LoginWithGoogle from "./LoginWithGoogle";
 
 const registerFormSchema = z
   .object({
@@ -182,13 +183,7 @@ const RegisterForm = ({
           </span>
         </div>
 
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full cursor-pointer"
-        >
-          Login with Google
-        </Button>
+        <LoginWithGoogle />
       </div>
 
       <div className="text-center text-sm">
