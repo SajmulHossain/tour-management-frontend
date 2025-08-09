@@ -56,6 +56,7 @@ const LoginForm = ({
       const response = await login(data).unwrap();
       console.log(response);
       toast.success(response?.message || 'Login Successfull');
+      navigate('/')
     } catch (error: any) {
       if (error.data.message === "User is not verified") {
         navigate("/verify", {

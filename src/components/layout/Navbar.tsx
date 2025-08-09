@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/popover"
 import { Link } from "react-router"
 import { ModeToggler } from "./ModeToggler"
+import { useGetMeQuery } from "@/redux/features/auth/auth.api"
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
@@ -21,6 +22,9 @@ const navigationLinks = [
 ]
 
 export default function Navbar() {
+
+  const {data} = useGetMeQuery(undefined);
+  console.log(data);
   
   return (
     <header className="border-b">
