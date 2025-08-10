@@ -2,7 +2,7 @@ import { envVars } from '@/config/env.config';
 import axios from 'axios';
 
 export const axiosInstance = axios.create({
-    baseURL: import.meta.env.PROD ? envVars.prodUrl : envVars.baseUrl,
+    baseURL: envVars.baseUrl,
     withCredentials: true
 })
 

@@ -30,7 +30,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import z from "zod";
 
@@ -44,7 +44,7 @@ const Verify = () => {
   const [confirm, setConfirm] = useState(false);
   const { state } = useLocation();
   const [timer, setTimer] = useState(120);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [sendOtp] = useSendOTPMutation();
   const [verifyOTP] = useVerifyOTPMutation();
@@ -59,9 +59,9 @@ const Verify = () => {
   const onSubmit = async (data: z.infer<typeof OTPSchema>) => {
     const toastId = toast.loading("Verifying OTP");
     try {
-      const res = await verifyOTP({ email: state, otp: data.pin }).unwrap();
+      await verifyOTP({ email: state, otp: data.pin }).unwrap();
       toast.success("OTP Verified", { id: toastId });
-      console.log(res);
+      navigate("/");
     } catch (error: any) {
       toast.error(error.data.message || "Failed to verify OTP", {
         id: toastId,
@@ -75,32 +75,32 @@ const Verify = () => {
       await sendOtp({ email: state }).unwrap();
       toast.success("OTP Sent", { id: toastId });
       setConfirm(true);
-      setTimer(120)
+      setTimer(120);
     } catch (error: any) {
       toast.error(error.data.message || "Failed to sent otp", { id: toastId });
     }
   };
 
-  // useEffect(() => {
-  //   if (!state) {
-  //     navigate(-1);
-  //   }
-  // }, [navigate, state]);
+  useEffect(() => {
+    if (!state) {
+      navigate(-1);
+    }
+  }, [navigate, state]);
 
   useEffect(() => {
-    if(!state || !confirm) {
+    if (!state || !confirm) {
       return;
     }
-    
+
     const timerId = setInterval(() => {
       // if(state && confirm) {
-        setTimer(prev => prev > 0 ? prev - 1 : 0);
-        console.log('tick');
+      setTimer((prev) => (prev > 0 ? prev - 1 : 0));
+      console.log("tick");
       // }
     }, 1000);
 
     return () => clearInterval(timerId);
-  }, [confirm, state])
+  }, [confirm, state]);
 
   return (
     <section className="min-h-screen place-items-center grid">
@@ -148,10 +148,24 @@ const Verify = () => {
                         </InputOTP>
                       </FormControl>
                       <FormDescription>
-                        <Button type="button" disabled={timer !== 0} onClick={handleSendOTP} variant={"link"} className={cn("p-0 h-0", {
-                          'hidden' : timer !== 0
-                        })}>Resend OTP</Button>
-                       {" "}{timer > 0?  <span>Resend OTP in {timer.toString().padStart(2,"0")}</span> : ""}
+                        <Button
+                          type="button"
+                          disabled={timer !== 0}
+                          onClick={handleSendOTP}
+                          variant={"link"}
+                          className={cn("p-0 h-0", {
+                            hidden: timer !== 0,
+                          })}
+                        >
+                          Resend OTP
+                        </Button>{" "}
+                        {timer > 0 ? (
+                          <span>
+                            Resend OTP in {timer.toString().padStart(2, "0")}
+                          </span>
+                        ) : (
+                          ""
+                        )}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
