@@ -61,7 +61,7 @@ const Verify = () => {
     try {
       await verifyOTP({ email: state, otp: data.pin }).unwrap();
       toast.success("OTP Verified", { id: toastId });
-      navigate("/");
+      navigate("/login");
     } catch (error: any) {
       toast.error(error.data.message || "Failed to verify OTP", {
         id: toastId,
