@@ -8,6 +8,10 @@ import { generateRoutes } from "@/utils/generateRoutes";
 import { createBrowserRouter } from "react-router";
 import { adminSidebarItems } from "./adminSidebarItems";
 import { userSidebarItems } from "./userSidebarItems";
+import { withAuth } from "@/utils/withAuth";
+import Unauthorized from "@/pages/Unauthorized";
+import { role } from "@/constants/constants";
+import type { TRole } from "@/types";
 
 const router = createBrowserRouter([
   {
@@ -16,7 +20,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "about",
-        Component: About,
+        Component: withAuth(About, role.superAdmin as TRole),
       },
     ],
   },
@@ -42,6 +46,10 @@ const router = createBrowserRouter([
     path: "/verify",
     Component: Verify,
   },
+  {
+    path: '/unauthorized',
+    Component: Unauthorized
+  }
 ]);
 
 export default router;
