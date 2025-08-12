@@ -1,16 +1,15 @@
+import Delete from "@/components/Delete";
 import AddTourModal from "@/components/modules/admin/tour/AddTourModal";
-import { Button } from "@/components/ui/button";
 import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 import { useGetTourTypeQuery } from "@/redux/features/tour/tour.api";
-import { Trash2Icon } from "lucide-react";
 import type { Key } from "react";
 
 const AddTourType = () => {
@@ -18,10 +17,10 @@ const AddTourType = () => {
     
   return (
     <section className="max-w-5xl mx-auto w-full">
-        <div className="flex justify-between items-center my-6">
-            <h1 className="font-semibold text-xl">Tour Types</h1>
-            <AddTourModal />
-        </div>
+      <div className="flex justify-between items-center my-6">
+        <h1 className="font-semibold text-xl">Tour Types</h1>
+        <AddTourModal />
+      </div>
       <Table className="border border-muted rounded-md">
         <TableCaption>A list of Tour Types</TableCaption>
         <TableHeader>
@@ -31,10 +30,12 @@ const AddTourType = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data?.map((tourType: { _id: Key, name: string }) => (
+          {data?.map((tourType: { _id: Key; name: string }) => (
             <TableRow key={tourType._id}>
               <TableCell className="font-medium">{tourType.name}</TableCell>
-              <TableCell className="text-right"><Button size={"sm"} variant={"destructive"}><Trash2Icon /></Button></TableCell>
+              <TableCell className="text-right">
+                <Delete type="tour type" project_name={tourType.name} />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

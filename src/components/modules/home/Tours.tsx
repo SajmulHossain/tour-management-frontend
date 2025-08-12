@@ -1,15 +1,17 @@
 import { useGetAllToursQuery } from "@/redux/features/tour/tour.api";
 import Tour from "./Tour";
+import type { ITour } from "@/types";
 
 const Tours = () => {
     const { data } = useGetAllToursQuery(undefined);
-    console.log(data?.data);
 
   return (
-    <section>
-      {
-        data?.data?.map(tour => <Tour key={tour._id} tour={tour} />)
-      }
+    <section className="section">
+      <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-4">
+        {data?.data?.map((tour: ITour) => (
+          <Tour key={tour._id} tour={tour} />
+        ))}
+      </div>
     </section>
   );
 };

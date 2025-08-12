@@ -15,7 +15,7 @@ const Tour = ({ tour }: { tour: ITour }) => {
 
   return (
     <div>
-      <Card>
+      <Card className="h-full">
         <CardHeader>
           <CardTitle className="text-2xl">{title}</CardTitle>
           <p>{tourType.name}</p>
@@ -29,7 +29,7 @@ const Tour = ({ tour }: { tour: ITour }) => {
             ))}
           </div>
         </CardContent>
-        <CardFooter className="w-full flex justify-between">
+        <CardFooter className="w-full flex justify-between mt-auto">
           <p>{format(startDate || new Date(), "PP")}</p>
           <CardAction>See More Details</CardAction>
         </CardFooter>
