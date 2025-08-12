@@ -23,6 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { usePostTourTypeMutation } from "@/redux/features/tour/tour.api";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -33,6 +34,7 @@ const AddTourTypeZodSchema = z.object({
 
 const AddTourModal = () => {
   const [postTourType] = usePostTourTypeMutation();
+  const [isOpenForm, setIsOpenForm] = useState<boolean>(false);
 
   const form = useForm({
     resolver: zodResolver(AddTourTypeZodSchema),
@@ -46,6 +48,7 @@ const AddTourModal = () => {
     try {
       await postTourType(data).unwrap();
       form.reset();
+      setIsOpenForm(false);
       toast.success("Tour type added", { id: toastId });
     } catch (error: any) {
       toast.error(error?.data?.message || "Failed to add tour type", {
@@ -54,7 +57,7 @@ const AddTourModal = () => {
     }
   };
   return (
-    <Dialog>
+    <Dialog open={isOpenForm} onOpenChange={setIsOpenForm}>
       <form>
         <DialogTrigger asChild>
           <Button>Add Tour Type</Button>
