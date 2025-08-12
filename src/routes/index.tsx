@@ -12,6 +12,7 @@ import { withAuth } from "@/utils/withAuth";
 import { createBrowserRouter } from "react-router";
 import { adminSidebarItems } from "./adminSidebarItems";
 import { userSidebarItems } from "./userSidebarItems";
+import Home from "@/pages/Home";
 
 const router = createBrowserRouter([
   {
@@ -19,8 +20,12 @@ const router = createBrowserRouter([
     Component: App,
     children: [
       {
+        index: true,
+        Component: Home
+      },
+      {
         path: "about",
-        Component: withAuth(About, role.superAdmin as TRole),
+        Component: About,
       },
     ],
   },
