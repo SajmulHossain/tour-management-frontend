@@ -15,11 +15,10 @@ import { toast } from "sonner";
 
 const AddTourType = () => {
     const {data} = useGetTourTypeQuery(undefined);
-    const [removeTourType] = useRemoveTourTypeMutation();
+    const [removeTourType, { isLoading: isDeletingTourType }] = useRemoveTourTypeMutation();
 
     const handleRemoveTourType = async (id: string) => {
       const toastId = toast.loading("Removing Tour Type");
-      console.log(id);
       try {
         await removeTourType(id).unwrap();
         toast.success("Tour type removed", { id: toastId })
@@ -47,7 +46,12 @@ const AddTourType = () => {
             <TableRow key={tourType._id}>
               <TableCell className="font-medium">{tourType.name}</TableCell>
               <TableCell className="text-right">
-                <Delete type="tour type" project_name={tourType.name} onConfirm={() => handleRemoveTourType(tourType._id)} />
+                <Delete
+                  type="tour type"
+                  project_name={tourType.name}
+                  onConfirm={() => handleRemoveTourType(tourType._id)}
+                  isPending={isDeletingTourType}
+                />
               </TableCell>
             </TableRow>
           ))}

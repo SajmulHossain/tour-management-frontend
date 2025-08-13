@@ -19,9 +19,10 @@ interface IProps {
   project_name: string;
   type: string;
   onConfirm: () => void;
+  isPending: boolean;
 }
 
-export default function Delete({project_name, type, onConfirm}: IProps) {
+export default function Delete({project_name, type, onConfirm, isPending}: IProps) {
   const id = useId()
   const [inputValue, setInputValue] = useState("")
 
@@ -75,7 +76,7 @@ export default function Delete({project_name, type, onConfirm}: IProps) {
             <Button
               type="button"
               className="flex-1"
-              disabled={inputValue !== project_name}
+              disabled={inputValue !== project_name || isPending}
               variant={"destructive"}
               onClick={handleDelete}
             >
