@@ -16,8 +16,8 @@ import {
 import { getSidebarItems } from "@/utils/getSidebarItems"
 import { Link } from "react-router"
 import { authApi, useGetMeQuery, useLogoutMutation } from "@/redux/features/auth/auth.api"
-import { Button } from "./ui/button"
 import { useAppDispatch } from "@/redux/hooks"
+import { Button } from "./button"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const {data: userInfo} = useGetMeQuery(undefined);

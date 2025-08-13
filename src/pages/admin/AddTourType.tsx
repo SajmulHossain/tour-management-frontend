@@ -1,5 +1,6 @@
-import Delete from "@/components/Delete";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import AddTourModal from "@/components/modules/admin/tour/AddTourModal";
+import Delete from "@/components/ui/Delete";
 import {
   Table,
   TableBody,
@@ -9,11 +10,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useGetTourTypeQuery } from "@/redux/features/tour/tour.api";
-import type { Key } from "react";
+import { useGetTourTypeQuery, useRemoveTourTypeMutation } from "@/redux/features/tour/tour.api";
+import { toast } from "sonner";
 
 const AddTourType = () => {
     const {data} = useGetTourTypeQuery(undefined);
+    const [removeTourType] = useRemoveTourTypeMutation();
+
+    const handleRemoveTourType = async (id: string) => {
+      const toastId = toast.loading("Removing Tour Type");
+      console.log(id);
+      try {
+        await removeTourType(id).unwrap();
+        toast.success("Tour type removed", { id: toastId })
+      } catch (error: any) {
+        toast.error(error.message || "Failed to remove tour type", { id: toastId });
+      }
+    }
     
   return (
     <section className="max-w-5xl mx-auto w-full">
@@ -30,11 +43,11 @@ const AddTourType = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data?.map((tourType: { _id: Key; name: string }) => (
+          {data?.map((tourType: { _id: string; name: string }) => (
             <TableRow key={tourType._id}>
               <TableCell className="font-medium">{tourType.name}</TableCell>
               <TableCell className="text-right">
-                <Delete type="tour type" project_name={tourType.name} />
+                <Delete type="tour type" project_name={tourType.name} onConfirm={() => handleRemoveTourType(tourType._id)} />
               </TableCell>
             </TableRow>
           ))}

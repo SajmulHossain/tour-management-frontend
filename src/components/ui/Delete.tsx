@@ -1,5 +1,5 @@
+import { CircleAlertIcon } from "lucide-react"
 import { useId, useState } from "react"
-import { CircleAlertIcon, DeleteIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -18,17 +18,22 @@ import { Label } from "@/components/ui/label"
 interface IProps {
   project_name: string;
   type: string;
+  onConfirm: () => void;
 }
 
-export default function Delete({project_name, type}: IProps) {
+export default function Delete({project_name, type, onConfirm}: IProps) {
   const id = useId()
   const [inputValue, setInputValue] = useState("")
+
+  const handleDelete = () => {
+    onConfirm();
+  }
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="destructive">
-          <DeleteIcon />
+        <Button variant={"destructive"}>
+          Delete
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -63,7 +68,7 @@ export default function Delete({project_name, type}: IProps) {
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button type="button" variant="outline" className="flex-1">
+              <Button type="button" variant="secondary" className="flex-1">
                 Cancel
               </Button>
             </DialogClose>
@@ -71,6 +76,8 @@ export default function Delete({project_name, type}: IProps) {
               type="button"
               className="flex-1"
               disabled={inputValue !== project_name}
+              variant={"destructive"}
+              onClick={handleDelete}
             >
               Delete
             </Button>
