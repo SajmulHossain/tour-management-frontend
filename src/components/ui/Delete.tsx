@@ -23,8 +23,8 @@ interface IProps {
 }
 
 export default function Delete({project_name, type, onConfirm, isPending}: IProps) {
-  const id = useId()
-  const [inputValue, setInputValue] = useState("")
+  const id = useId();
+  const [inputValue, setInputValue] = useState("");
 
   const handleDelete = () => {
     onConfirm();

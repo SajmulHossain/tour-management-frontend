@@ -64,7 +64,7 @@ const AddTourModal = () => {
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Edit profile</DialogTitle>
+            <DialogTitle>Add Tour Type</DialogTitle>
             <DialogDescription>
               Add a tour type to specify more to travellers
             </DialogDescription>
