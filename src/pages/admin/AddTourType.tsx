@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import AddTourModal from "@/components/modules/admin/tour/AddTourModal";
+import AddTourModal from "@/components/modules/admin/Tour/AddTourModal";
 import Delete from "@/components/ui/Delete";
 import {
   Table,
