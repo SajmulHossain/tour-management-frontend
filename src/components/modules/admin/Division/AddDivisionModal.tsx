@@ -18,6 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import SinglePhotoUpload from '@/components/SinglePhotoUpload';
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,6 +33,8 @@ const AddDivisionZodSchema = z.object({
 
 const AddDivisionModal = () => {
     const [open, isOpen] = useState(false);
+    const [image, setImage] = useState<File | null>(null);
+   
     const form = useForm({
         resolver: zodResolver(AddDivisionZodSchema),
         defaultValues: {
@@ -96,6 +99,8 @@ const AddDivisionModal = () => {
                 )}
               />
             </form>
+
+            <SinglePhotoUpload onChange={setImage} />
           </Form>
           <DialogFooter>
             <DialogClose asChild>
