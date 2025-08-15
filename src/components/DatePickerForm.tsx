@@ -5,7 +5,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
 } from "@/components/ui/form";
 import {
   Popover,
@@ -55,7 +55,19 @@ const DatePickerForm = <T extends FieldValues>({ form, index }: IProps<T>) => {
                 selected={field.value}
                 onSelect={field.onChange}
                 disabled={(date) =>
-                  date > new Date() || date < new Date("1900-01-01")
+                  index === 0
+                    ? date <
+                        new Date(
+                          new Date().setDate(new Date().getDate() - 1)
+                        ) || date < new Date("1900-01-01")
+                    : date <
+                      new Date(
+                        new Date().setDate(
+                          new Date(
+                            form.getValues("startDate" as Path<T>)
+                          ).getDate() - 1
+                        )
+                      )
                 }
                 captionLayout="dropdown"
               />

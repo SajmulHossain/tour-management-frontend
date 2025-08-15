@@ -72,7 +72,7 @@ export default function MultipleImageUpload({
           <p className="text-muted-foreground text-xs">
             SVG, PNG, JPG or GIF (max. {maxSizeMB}MB)
           </p>
-          <Button variant="outline" className="mt-4" onClick={openFileDialog}>
+          <Button type="button" variant="outline" className="mt-4" onClick={openFileDialog}>
             <UploadIcon className="-ms-1 opacity-60" aria-hidden="true" />
             Select images
           </Button>
@@ -116,6 +116,7 @@ export default function MultipleImageUpload({
               </div>
 
               <Button
+              type="button"
                 size="icon"
                 variant="ghost"
                 className="text-muted-foreground/80 hover:text-foreground -me-2 size-8 hover:bg-transparent"

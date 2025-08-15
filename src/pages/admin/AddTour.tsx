@@ -104,6 +104,7 @@ const AddTour = () => {
 
   const onsubmit = (data: TourZodType) => {
     console.log(data);
+    console.log(images);
   };
 
   const commandArr: [[IDivision], [ITourType]] = [
@@ -399,11 +400,12 @@ const AddTour = () => {
                 ))}
               </div>
 
-              <div>
-                <Textarea placeholder="Tour Description" className="h-40" />
+              <div className="flex flex-col md:flex-row gap-4">
+                <Textarea placeholder="Tour Description" className="flex-1" />
+                <div className="flex-1">
+                  <MultipleImageUpload onChange={setImages} />
+                </div>
               </div>
-
-              <MultipleImageUpload onChange={setImages} />
 
               <Button type="submit">Add Tour</Button>
             </form>
