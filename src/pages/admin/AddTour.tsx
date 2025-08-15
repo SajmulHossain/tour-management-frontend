@@ -78,7 +78,7 @@ const tourZodSchema = z
 export type TourZodType = z.infer<typeof tourZodSchema>;
 
 const AddTour = () => {
-    const [images, setImages] = useState<(File | FileMetadata)[] | []>([])
+    const [images, setImages] = useState<(File | FileMetadata)[] | []>([]);
     
   const { data: division, isLoading: divisionLoading } =
     useGetDivisionQuery(undefined);
@@ -189,7 +189,7 @@ const AddTour = () => {
                               >
                                 {field.value
                                   ? values.find(
-                                      (value) => value.name === field.value
+                                      (value) => value._id === field.value
                                     )?.name
                                   : `Select ${
                                       index === 0 ? "division" : "tour type"
@@ -214,7 +214,7 @@ const AddTour = () => {
                                 <CommandGroup>
                                   {values.map((value) => (
                                     <CommandItem
-                                      value={value.name}
+                                      value={value._id}
                                       key={value._id}
                                       onSelect={() => {
                                         form.setValue(
@@ -227,7 +227,7 @@ const AddTour = () => {
                                       <Check
                                         className={cn(
                                           "ml-auto",
-                                          value.name === field.value
+                                          value._id === field.value
                                             ? "opacity-100"
                                             : "opacity-0"
                                         )}

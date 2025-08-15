@@ -1,5 +1,5 @@
 import { CircleAlertIcon } from "lucide-react"
-import { useId, useState } from "react"
+import { useId, useState, type ReactElement } from "react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -20,9 +20,10 @@ interface IProps {
   type: string;
   onConfirm: () => void;
   isPending: boolean;
+  view?: ReactElement
 }
 
-export default function Delete({project_name, type, onConfirm, isPending}: IProps) {
+export default function Delete({project_name, type, onConfirm, isPending, view }: IProps) {
   const id = useId();
   const [inputValue, setInputValue] = useState("");
 
@@ -34,7 +35,7 @@ export default function Delete({project_name, type, onConfirm, isPending}: IProp
     <Dialog>
       <DialogTrigger asChild>
         <Button variant={"destructive"}>
-          Delete
+          {view || "Delete"}
         </Button>
       </DialogTrigger>
       <DialogContent>
