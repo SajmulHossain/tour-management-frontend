@@ -1,3 +1,4 @@
+import DatePickerForm from "@/components/DatePickerForm";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -83,6 +84,7 @@ const AddTour = () => {
                   </FormItem>
                 )}
               />
+
               <div className="flex flex-col md:flex-row gap-4">
                 <FormField
                   name="location"
@@ -124,9 +126,11 @@ const AddTour = () => {
                   )}
                 />
               </div>
+
               <div className="flex flex-col md:flex-row gap-4">
                 {commandArr?.map((values, index) => (
                   <FormField
+                    key={index}
                     control={form.control}
                     name={index === 0 ? "division" : "tourType"}
                     render={({ field }) => (
@@ -196,7 +200,17 @@ const AddTour = () => {
                   />
                 ))}
               </div>
+
+              <div className="flex flex-col md:flex-row gap-4">
+                {Array(2)
+                  .fill(null)
+                  .map((_, index) => (
+                    <DatePickerForm form={form} index={index} />
+                  ))}
+              </div>
+            <Button type="submit">Add Tour</Button>
             </form>
+
           </Form>
         </CardContent>
         <CardFooter>
