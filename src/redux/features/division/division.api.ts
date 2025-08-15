@@ -4,7 +4,7 @@ export const divisionApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getDivision: builder.query({
       query: () => ({
-        url: "/division/tour",
+        url: "/division",
         method: "GET",
       }),
       transformResponse: (response) => response.data,

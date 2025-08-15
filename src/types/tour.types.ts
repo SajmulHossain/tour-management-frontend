@@ -1,3 +1,5 @@
+import type { IDivision } from "./division.type";
+
 export interface ITour {
   _id: string;
   title: string;
@@ -22,11 +24,6 @@ export interface ITour {
 }
 
 export interface ITourType {
-  _id: string;
-  name: string;
-}
-
-export interface IDivision {
   _id: string;
   name: string;
 }
