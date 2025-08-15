@@ -39,29 +39,41 @@ import { useGetDivisionQuery } from "@/redux/features/division/division.api";
 import { useGetTourTypeQuery } from "@/redux/features/tour/tour.api";
 import type { IDivision, ITourType } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { formatISO } from "date-fns";
 import { Check, ChevronsUpDown, Loader2, Plus } from "lucide-react";
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import z from "zod";
 
-const tourZodSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, "Description is required"),
-  location: z.string().min(1, "Location is required"),
-  costFrom: z.number().min(1, "Cost is required"),
-  startDate: z.date({ message: "Start date is required" }),
-  endDate: z.date({ message: "End date is required" }),
-  departureLocation: z.string().min(1, "Departure location is required"),
-  arrivalLocation: z.string().min(1, "Arrival location is required"),
-  included: z.array(z.object({ value: z.string() })).min(1),
-  excluded: z.array(z.object({ value: z.string() })).min(1),
-  amenities: z.array(z.object({ value: z.string() })),
-  tourPlan: z.array(z.object({ value: z.string() })),
-  maxGuest: z.number().min(1, "Max guest is required"),
-  minAge: z.number().min(1, "Minimum age is required"),
-  division: z.string().min(1, "Division is required"),
-  tourType: z.string().min(1, "Tour type is required"),
-});
+const tourZodSchema = z
+  .object({
+    title: z.string().min(1, "Title is required"),
+    description: z.string().optional(),
+    location: z.string().min(1, "Location is required"),
+    costFrom: z.number().min(1, "Cost is required"),
+    startDate: z.union([
+      z.date({ message: "Start date is required" }),
+      z.string(),
+    ]),
+    endDate: z.union([
+      z.date({ message: "Start date is required" }),
+      z.string(),
+    ]),
+    departureLocation: z.string().min(1, "Departure location is required"),
+    arrivalLocation: z.string().min(1, "Arrival location is required"),
+    included: z.array(z.union([z.object({ value: z.string() }), z.string()])).min(1),
+    excluded: z.array(z.union([z.object({ value: z.string() }), z.string()])).min(1),
+    amenities: z.array(z.union([z.object({ value: z.string() }), z.string()])),
+    tourPlan: z.array(z.union([z.object({ value: z.string() }), z.string()])),
+    maxGuest: z.number().min(1, "Max guest is required"),
+    minAge: z.number().min(1, "Minimum age is required"),
+    division: z.string().min(1, "Division is required"),
+    tourType: z.string().min(1, "Tour type is required"),
+  })
+  .refine((data) => data.startDate <= data.endDate, {
+    error: "End date cannot less than start date",
+    path: ["endDate"],
+  });
 
 export type TourZodType = z.infer<typeof tourZodSchema>;
 
@@ -103,6 +115,13 @@ const AddTour = () => {
   };
 
   const onsubmit = (data: TourZodType) => {
+       data.startDate= formatISO(data.startDate)
+       data.endDate = formatISO(data.endDate)
+       data.amenities = !(data.amenities[0] as {value: string}).value ? [] : data.amenities.map(data => data);
+       data.included = !(data.included[0] as {value: string}).value ? [] : data.included.map(data => data);
+       data.excluded = !(data.excluded[0] as {value: string}).value ? [] : data.excluded.map(data => data);
+       data.tourPlan = !(data.tourPlan[0] as {value: string}).value ? [] : data.excluded.map(data => data);
+
     console.log(data);
     console.log(images);
   };
@@ -282,7 +301,6 @@ const AddTour = () => {
                       <FormLabel>Max Guest</FormLabel>
                       <FormControl>
                         <Input
-                          type="number"
                           placeholder="e.g, 1200"
                           {...field}
                           onChange={(e) =>
@@ -327,7 +345,6 @@ const AddTour = () => {
                       <FormLabel>Min Age</FormLabel>
                       <FormControl>
                         <Input
-                          type="number"
                           placeholder="e.g, 5"
                           {...field}
                           onChange={(e) =>
@@ -350,7 +367,6 @@ const AddTour = () => {
                       <FormLabel>Cost</FormLabel>
                       <FormControl>
                         <Input
-                          type="number"
                           placeholder="e.g, 1200"
                           {...field}
                           onChange={(e) =>
@@ -401,7 +417,25 @@ const AddTour = () => {
               </div>
 
               <div className="flex flex-col md:flex-row gap-4">
-                <Textarea placeholder="Tour Description" className="flex-1" />
+                <FormField
+                  name="costFrom"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Cost</FormLabel>
+                      <FormControl>
+                        <Textarea {...field}
+                          placeholder="Tour Description"
+                          className="flex-1"
+                        />
+                      </FormControl>
+                      <FormDescription className="sr-only">
+                        This is your public display name.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <div className="flex-1">
                   <MultipleImageUpload onChange={setImages} />
                 </div>
