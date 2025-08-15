@@ -2,41 +2,64 @@ import DatePickerForm from "@/components/DatePickerForm";
 import DynamicInput from "@/components/DynamicInput";
 import { Button } from "@/components/ui/button";
 import {
-    Card,
-    CardContent,
-    CardFooter,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
 } from "@/components/ui/command";
 import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useGetDivisionQuery } from "@/redux/features/division/division.api";
 import { useGetTourTypeQuery } from "@/redux/features/tour/tour.api";
 import type { IDivision, ITourType } from "@/types";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown, Loader2, Plus } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
+import z from "zod";
+
+const tourZodSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  description: z.string().min(1, "Description is required"),
+  location: z.string().min(1, "Location is required"),
+  costFrom: z.number().min(1, "Cost is required"),
+  startDate: z.date({ message: "Start date is required" }),
+  endDate: z.date({ message: "End date is required" }),
+  departureLocation: z.string().min(1, "Departure location is required"),
+  arrivalLocation: z.string().min(1, "Arrival location is required"),
+  included: z.array(z.object({ value: z.string() })).min(1),
+  excluded: z.array(z.object({ value: z.string() })).min(1),
+  amenities: z.array(z.object({ value: z.string() })),
+  tourPlan: z.array(z.object({ value: z.string() })),
+  maxGuest: z.number().min(1, "Max guest is required"),
+  minAge: z.number().min(1, "Minimum age is required"),
+  division: z.string().min(1, "Division is required"),
+  tourType: z.string().min(1, "Tour type is required"),
+});
+
+export type TourZodType = z.infer<typeof tourZodSchema>
 
 const AddTour = () => {
   const { data: division, isLoading: divisionLoading } =
@@ -44,11 +67,41 @@ const AddTour = () => {
   const { data: tourType, isLoading: tourTypeLoading } =
     useGetTourTypeQuery(undefined);
 
-  const form = useForm();
+  const form = useForm<TourZodType>({
+    resolver: zodResolver(tourZodSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      location: "",
+      costFrom: 0,
+      startDate: new Date(),
+      endDate: new Date(),
+      tourType: "",
+      included: [],
+      excluded: [],
+      amenities: [],
+      tourPlan: [],
+      maxGuest: 0,
+      minAge: 0,
+      division: "",
+      departureLocation: "",
+      arrivalLocation: "",
+    },
+  });
 
-  const {append:  appendInclude, fields: fieldsInclude, remove: removeInclude} = useFieldArray({control: form.control, name: "included"})
+  const {
+    append: appendInclude,
+    fields: fieldsInclude,
+    remove: removeInclude,
+  } = useFieldArray({ control: form.control, name: "included" });
 
-  const onsubmit = (data) => {
+  const {
+    append: appendExcluded,
+    fields: fieldsExcluded,
+    remove: removeExcluded,
+  } = useFieldArray({ control: form.control, name: "excluded" });
+
+  const onsubmit = (data: TourZodType) => {
     console.log(data);
   };
 
@@ -114,7 +167,9 @@ const AddTour = () => {
                                   ? values.find(
                                       (value) => value.name === field.value
                                     )?.name
-                                  : "Select language"}
+                                  : `Select ${
+                                      index === 0 ? "division" : "tour type"
+                                    }`}
                                 <ChevronsUpDown className="opacity-50" />
                               </Button>
                             </FormControl>
@@ -122,11 +177,16 @@ const AddTour = () => {
                           <PopoverContent className="p-0">
                             <Command>
                               <CommandInput
-                                placeholder="Search framework..."
+                                placeholder={`Search ${
+                                  index === 0 ? "division" : "tour type"
+                                }`}
                                 className="h-9"
                               />
                               <CommandList>
-                                <CommandEmpty>No framework found.</CommandEmpty>
+                                <CommandEmpty>
+                                  No {index === 0 ? "division" : "tour type"}{" "}
+                                  found.
+                                </CommandEmpty>
                                 <CommandGroup>
                                   {values.map((value) => (
                                     <CommandItem
@@ -170,15 +230,56 @@ const AddTour = () => {
                   ))}
               </div>
 
-              <div>
-                <div className="flex justify-between items-center">
-                  <p className="font-semibold">Included</p>
-                  <Button size="icon" onClick={() => appendInclude("")}>
-                    <Plus />
-                  </Button>
+              <div className="flex flex-col lg:flex-row gap-4">
+                <div className="flex-1">
+                  <div className="flex justify-between items-center">
+                    <p className="font-semibold">Included</p>
+                    <Button
+                      type="button"
+                      size="icon"
+                      onClick={() => appendInclude({value: ""})}
+                    >
+                      <Plus />
+                    </Button>
+                  </div>
+
+                  <div className="mt-2 space-y-2">
+                    {fieldsInclude?.map((_, index) => (
+                      <DynamicInput
+                        key={index}
+                        form={form}
+                        index={index}
+                        name="included"
+                        remove={removeInclude}
+                      />
+                    ))}
+                  </div>
                 </div>
 
-                <div className="mt-2">{fieldsInclude?.map((_, index) => <DynamicInput form={form} index={index} />)}</div>
+                <div className="flex-1">
+                  <div className="flex justify-between items-center">
+                    <p className="font-semibold">Exclude</p>
+                    <Button
+                      type="button"
+                      size="icon"
+                      onClick={() => appendExcluded({ value: "" })}
+                    >
+                      <Plus />
+                    </Button>
+                  </div>
+
+                  <div className="mt-2 space-y-2">
+                    {fieldsExcluded?.map((_, index) => (
+                      <DynamicInput
+                        key={index}
+                        form={form}
+                        index={index}
+                        remove={removeExcluded}
+                        name="excluded"
+                      />
+                    ))}
+                  </div>
+                </div>
               </div>
 
               <div className="flex flex-col md:flex-row gap-4">
@@ -202,13 +303,20 @@ const AddTour = () => {
                   )}
                 />
                 <FormField
-                  name="maxAge"
+                  name="minAge"
                   control={form.control}
                   render={({ field }) => (
                     <FormItem className="flex-1">
-                      <FormLabel>Max Age</FormLabel>
+                      <FormLabel>Min Age</FormLabel>
                       <FormControl>
-                        <Input type="number" placeholder="e.g, 5" {...field} />
+                        <Input
+                          type="number"
+                          placeholder="e.g, 5"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value))
+                          }
+                        />
                       </FormControl>
                       <FormDescription className="sr-only">
                         This is your public display name.
@@ -228,6 +336,9 @@ const AddTour = () => {
                           type="number"
                           placeholder="e.g, 1200"
                           {...field}
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value))
+                          }
                         />
                       </FormControl>
                       <FormDescription className="sr-only">

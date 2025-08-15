@@ -1,33 +1,32 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
 } from "@/components/ui/form";
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import type { FieldValues, UseFormReturn } from "react-hook-form";
+import type { FieldValues, Path, UseFormReturn } from "react-hook-form";
 
-interface IProps {
-  form: UseFormReturn<FieldValues, any, FieldValues>;
+interface IProps<T extends FieldValues = FieldValues> {
+  form: UseFormReturn<T>;
   index: number;
 }
 
-const DatePickerForm = ({ form, index }: IProps) => {
+const DatePickerForm = <T extends FieldValues>({ form, index }: IProps<T>) => {
   return (
     <FormField
       control={form.control}
-      name={index === 0 ? "startDate" : "endDate"}
+      name={index === 0 ? ("startDate" as Path<T>) : ("endDate" as Path<T>)}
       render={({ field }) => (
         <FormItem className="w-full">
           <FormLabel>{index === 0 ? "Start Date" : "End Date"}</FormLabel>
