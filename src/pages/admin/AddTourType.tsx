@@ -14,7 +14,7 @@ import { useGetTourTypeQuery, useRemoveTourTypeMutation } from "@/redux/features
 import { toast } from "sonner";
 
 const AddTourType = () => {
-    const {data} = useGetTourTypeQuery(undefined);
+    const { data } = useGetTourTypeQuery(undefined);
     const [removeTourType, { isLoading: isDeletingTourType }] = useRemoveTourTypeMutation();
 
     const handleRemoveTourType = async (id: string) => {
