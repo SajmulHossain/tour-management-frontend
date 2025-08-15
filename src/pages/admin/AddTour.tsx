@@ -1,5 +1,6 @@
 import DatePickerForm from "@/components/DatePickerForm";
 import DynamicInput from "@/components/DynamicInput";
+import MultipleImageUpload from "@/components/MultiImageUpload";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -31,12 +32,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Textarea } from "@/components/ui/textarea";
+import type { FileMetadata } from "@/hooks/use-file-upload";
 import { cn } from "@/lib/utils";
 import { useGetDivisionQuery } from "@/redux/features/division/division.api";
 import { useGetTourTypeQuery } from "@/redux/features/tour/tour.api";
 import type { IDivision, ITourType } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown, Loader2, Plus } from "lucide-react";
+import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import z from "zod";
 
@@ -62,6 +66,8 @@ const tourZodSchema = z.object({
 export type TourZodType = z.infer<typeof tourZodSchema>;
 
 const AddTour = () => {
+    const [images, setImages] = useState<(File | FileMetadata)[] | []>([])
+    
   const { data: division, isLoading: divisionLoading } =
     useGetDivisionQuery(undefined);
   const { data: tourType, isLoading: tourTypeLoading } =
@@ -88,22 +94,6 @@ const AddTour = () => {
       arrivalLocation: "",
     },
   });
-
-  //   const {
-  //     append: appendInclude,
-  //     fields: fieldsInclude,
-  //     remove: removeInclude,
-  //   } = useFieldArray({ control: form.control, name: "included" });
-
-  //   const {
-  //     append: appendExcluded,
-  //     fields: fieldsExcluded,
-  //     remove: removeExcluded,
-  //   } = useFieldArray({ control: form.control, name: "excluded" });
-
-  //   const {fields: fieldsAmenities, append: appendAmenities, remove: removeAmenities} = useFieldArray({control: form.control, name: "amenities"})
-
-  //   const {fields: fieldsTourPlan, append: appendTourPlan, remove: removeTourPlan} = useFieldArray({control: form.control, name: "tourPlan"})
 
   const fieldArrays = {
     included: useFieldArray({ control: form.control, name: "included" }),
@@ -244,37 +234,68 @@ const AddTour = () => {
                   ))}
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
-                {(
-                  ["included", "excluded", "amenities", "tourPlan"] as const
-                ).map((key) => (
-                  <div key={key} className="flex-1">
-                    <div className="flex justify-between items-center">
-                      <p className="font-semibold">
-                        {key.charAt(0).toUpperCase() + key.slice(1)}
-                      </p>
-                      <Button
-                        type="button"
-                        size="icon"
-                        onClick={() => fieldArrays[key].append({ value: "" })}
-                      >
-                        <Plus />
-                      </Button>
-                    </div>
-
-                    <div className="mt-2 space-y-2">
-                      {fieldArrays[key].fields.map((_, index) => (
-                        <DynamicInput
-                          key={index}
-                          form={form}
-                          index={index}
-                          name={key}
-                          remove={fieldArrays[key].remove}
+              <div className="flex flex-col md:flex-row gap-4">
+                <FormField
+                  name="departureLocation"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Departure Location</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="e.g, Mirsarai, Chattogram"
+                          {...field}
                         />
-                      ))}
-                    </div>
-                  </div>
-                ))}
+                      </FormControl>
+                      <FormDescription className="sr-only">
+                        This is your public display name.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name="arrivalLocation"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Arrival Location</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="e.g, Mirsarai, Chattogram"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription className="sr-only">
+                        This is your public display name.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name="maxGuest"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Max Guest</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="e.g, 1200"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value))
+                          }
+                        />
+                      </FormControl>
+                      <FormDescription className="sr-only">
+                        This is your public display name.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
               <div className="flex flex-col md:flex-row gap-4">
@@ -344,6 +365,46 @@ const AddTour = () => {
                   )}
                 />
               </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
+                {(
+                  ["included", "excluded", "amenities", "tourPlan"] as const
+                ).map((key) => (
+                  <div key={key} className="flex-1">
+                    <div className="flex justify-between items-center">
+                      <p className="font-semibold">
+                        {key.charAt(0).toUpperCase() + key.slice(1)}
+                      </p>
+                      <Button
+                        type="button"
+                        size="icon"
+                        onClick={() => fieldArrays[key].append({ value: "" })}
+                      >
+                        <Plus />
+                      </Button>
+                    </div>
+
+                    <div className="mt-2 space-y-2">
+                      {fieldArrays[key].fields.map((_, index) => (
+                        <DynamicInput
+                          key={index}
+                          form={form}
+                          index={index}
+                          name={key}
+                          remove={fieldArrays[key].remove}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div>
+                <Textarea placeholder="Tour Description" className="h-40" />
+              </div>
+
+              <MultipleImageUpload onChange={setImages} />
+
               <Button type="submit">Add Tour</Button>
             </form>
           </Form>
