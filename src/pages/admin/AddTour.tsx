@@ -59,7 +59,7 @@ const tourZodSchema = z.object({
   tourType: z.string().min(1, "Tour type is required"),
 });
 
-export type TourZodType = z.infer<typeof tourZodSchema>
+export type TourZodType = z.infer<typeof tourZodSchema>;
 
 const AddTour = () => {
   const { data: division, isLoading: divisionLoading } =
@@ -77,10 +77,10 @@ const AddTour = () => {
       startDate: new Date(),
       endDate: new Date(),
       tourType: "",
-      included: [],
-      excluded: [],
-      amenities: [],
-      tourPlan: [],
+      included: [{ value: "" }],
+      excluded: [{ value: "" }],
+      amenities: [{ value: "" }],
+      tourPlan: [{ value: "" }],
       maxGuest: 0,
       minAge: 0,
       division: "",
@@ -89,23 +89,37 @@ const AddTour = () => {
     },
   });
 
-  const {
-    append: appendInclude,
-    fields: fieldsInclude,
-    remove: removeInclude,
-  } = useFieldArray({ control: form.control, name: "included" });
+  //   const {
+  //     append: appendInclude,
+  //     fields: fieldsInclude,
+  //     remove: removeInclude,
+  //   } = useFieldArray({ control: form.control, name: "included" });
 
-  const {
-    append: appendExcluded,
-    fields: fieldsExcluded,
-    remove: removeExcluded,
-  } = useFieldArray({ control: form.control, name: "excluded" });
+  //   const {
+  //     append: appendExcluded,
+  //     fields: fieldsExcluded,
+  //     remove: removeExcluded,
+  //   } = useFieldArray({ control: form.control, name: "excluded" });
+
+  //   const {fields: fieldsAmenities, append: appendAmenities, remove: removeAmenities} = useFieldArray({control: form.control, name: "amenities"})
+
+  //   const {fields: fieldsTourPlan, append: appendTourPlan, remove: removeTourPlan} = useFieldArray({control: form.control, name: "tourPlan"})
+
+  const fieldArrays = {
+    included: useFieldArray({ control: form.control, name: "included" }),
+    excluded: useFieldArray({ control: form.control, name: "excluded" }),
+    amenities: useFieldArray({ control: form.control, name: "amenities" }),
+    tourPlan: useFieldArray({ control: form.control, name: "tourPlan" }),
+  };
 
   const onsubmit = (data: TourZodType) => {
     console.log(data);
   };
 
-  const commandArr: [[IDivision], [ITourType]] = [division, tourType];
+  const commandArr: [[IDivision], [ITourType]] = [
+    division || [],
+    tourType || [],
+  ];
 
   if (divisionLoading || tourTypeLoading) {
     return (
@@ -230,56 +244,37 @@ const AddTour = () => {
                   ))}
               </div>
 
-              <div className="flex flex-col lg:flex-row gap-4">
-                <div className="flex-1">
-                  <div className="flex justify-between items-center">
-                    <p className="font-semibold">Included</p>
-                    <Button
-                      type="button"
-                      size="icon"
-                      onClick={() => appendInclude({value: ""})}
-                    >
-                      <Plus />
-                    </Button>
-                  </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
+                {(
+                  ["included", "excluded", "amenities", "tourPlan"] as const
+                ).map((key) => (
+                  <div key={key} className="flex-1">
+                    <div className="flex justify-between items-center">
+                      <p className="font-semibold">
+                        {key.charAt(0).toUpperCase() + key.slice(1)}
+                      </p>
+                      <Button
+                        type="button"
+                        size="icon"
+                        onClick={() => fieldArrays[key].append({ value: "" })}
+                      >
+                        <Plus />
+                      </Button>
+                    </div>
 
-                  <div className="mt-2 space-y-2">
-                    {fieldsInclude?.map((_, index) => (
-                      <DynamicInput
-                        key={index}
-                        form={form}
-                        index={index}
-                        name="included"
-                        remove={removeInclude}
-                      />
-                    ))}
+                    <div className="mt-2 space-y-2">
+                      {fieldArrays[key].fields.map((_, index) => (
+                        <DynamicInput
+                          key={index}
+                          form={form}
+                          index={index}
+                          name={key}
+                          remove={fieldArrays[key].remove}
+                        />
+                      ))}
+                    </div>
                   </div>
-                </div>
-
-                <div className="flex-1">
-                  <div className="flex justify-between items-center">
-                    <p className="font-semibold">Exclude</p>
-                    <Button
-                      type="button"
-                      size="icon"
-                      onClick={() => appendExcluded({ value: "" })}
-                    >
-                      <Plus />
-                    </Button>
-                  </div>
-
-                  <div className="mt-2 space-y-2">
-                    {fieldsExcluded?.map((_, index) => (
-                      <DynamicInput
-                        key={index}
-                        form={form}
-                        index={index}
-                        remove={removeExcluded}
-                        name="excluded"
-                      />
-                    ))}
-                  </div>
-                </div>
+                ))}
               </div>
 
               <div className="flex flex-col md:flex-row gap-4">
