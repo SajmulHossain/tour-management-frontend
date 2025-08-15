@@ -1,41 +1,42 @@
 import DatePickerForm from "@/components/DatePickerForm";
+import DynamicInput from "@/components/DynamicInput";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle,
 } from "@/components/ui/card";
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
 } from "@/components/ui/command";
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useGetDivisionQuery } from "@/redux/features/division/division.api";
 import { useGetTourTypeQuery } from "@/redux/features/tour/tour.api";
 import type { IDivision, ITourType } from "@/types";
-import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { Check, ChevronsUpDown, Loader2, Plus } from "lucide-react";
+import { useFieldArray, useForm } from "react-hook-form";
 
 const AddTour = () => {
   const { data: division, isLoading: divisionLoading } =
@@ -44,6 +45,8 @@ const AddTour = () => {
     useGetTourTypeQuery(undefined);
 
   const form = useForm();
+
+  const {append:  appendInclude, fields: fieldsInclude, remove: removeInclude} = useFieldArray({control: form.control, name: "included"})
 
   const onsubmit = (data) => {
     console.log(data);
@@ -84,48 +87,6 @@ const AddTour = () => {
                   </FormItem>
                 )}
               />
-
-              <div className="flex flex-col md:flex-row gap-4">
-                <FormField
-                  name="location"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Location</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="e.g, Mirsarai, Chattogram"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription className="sr-only">
-                        This is your public display name.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  name="costFrom"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Cost</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="e.g, 1200"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription className="sr-only">
-                        This is your public display name.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
 
               <div className="flex flex-col md:flex-row gap-4">
                 {commandArr?.map((values, index) => (
@@ -205,12 +166,80 @@ const AddTour = () => {
                 {Array(2)
                   .fill(null)
                   .map((_, index) => (
-                    <DatePickerForm form={form} index={index} />
+                    <DatePickerForm key={index} form={form} index={index} />
                   ))}
               </div>
-            <Button type="submit">Add Tour</Button>
-            </form>
 
+              <div>
+                <div className="flex justify-between items-center">
+                  <p className="font-semibold">Included</p>
+                  <Button size="icon" onClick={() => appendInclude("")}>
+                    <Plus />
+                  </Button>
+                </div>
+
+                <div className="mt-2">{fieldsInclude?.map((_, index) => <DynamicInput form={form} index={index} />)}</div>
+              </div>
+
+              <div className="flex flex-col md:flex-row gap-4">
+                <FormField
+                  name="location"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Location</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="e.g, Mirsarai, Chattogram"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription className="sr-only">
+                        This is your public display name.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name="maxAge"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Max Age</FormLabel>
+                      <FormControl>
+                        <Input type="number" placeholder="e.g, 5" {...field} />
+                      </FormControl>
+                      <FormDescription className="sr-only">
+                        This is your public display name.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name="costFrom"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Cost</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="e.g, 1200"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription className="sr-only">
+                        This is your public display name.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <Button type="submit">Add Tour</Button>
+            </form>
           </Form>
         </CardContent>
         <CardFooter>
