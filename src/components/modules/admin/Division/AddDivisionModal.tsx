@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -25,6 +26,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
+import { useAddDivisionMutation } from "@/redux/features/division/division.api";
+import { toast } from "sonner";
 
 const AddDivisionZodSchema = z.object({
     name: z.string().min(1, {error: "Division Name is Required"}),
@@ -32,8 +35,10 @@ const AddDivisionZodSchema = z.object({
 })
 
 const AddDivisionModal = () => {
-    const [open, isOpen] = useState(false);
+    const [open, setOpen] = useState(false);
     const [image, setImage] = useState<File | null>(null);
+
+    const [addDivision, { isLoading }] = useAddDivisionMutation();
    
     const form = useForm({
         resolver: zodResolver(AddDivisionZodSchema),
@@ -43,12 +48,24 @@ const AddDivisionModal = () => {
         }
     });
 
-    const onSubmit = (data: z.infer<typeof AddDivisionZodSchema>)=> {
-        console.log(data);
+    const onSubmit = async (data: z.infer<typeof AddDivisionZodSchema>)=> {
+        const formData = new FormData();
+        formData.append("data", JSON.stringify(data));
+        formData.append("file", image as File);
+
+        const toastId = toast.loading("Adding Division");
+
+        try {
+          await addDivision(formData).unwrap();
+          toast.success("Division Added", { id: toastId });
+          setOpen(false);
+        } catch (error: any) {
+          toast.error(error?.data?.message || "Failed to upload Division", {id: toastId});
+        }
     }
     
   return (
-    <Dialog open={open} onOpenChange={isOpen}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <form>
         <DialogTrigger asChild>
           <Button>Add Division</Button>
@@ -106,7 +123,7 @@ const AddDivisionModal = () => {
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button type="submit" form="add-division-form">
+            <Button type="submit" form="add-division-form" disabled={isLoading}>
               Add Division
             </Button>
           </DialogFooter>
