@@ -1,5 +1,5 @@
 import Hero from "@/components/modules/home/Hero";
-import Tours from "@/components/modules/home/Tours";
+import Tours from "@/pages/Tours";
 
 const Home = () => {
   return (

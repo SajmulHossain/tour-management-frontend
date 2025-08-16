@@ -13,6 +13,8 @@ import { createBrowserRouter } from "react-router";
 import { adminSidebarItems } from "./adminSidebarItems";
 import { userSidebarItems } from "./userSidebarItems";
 import Home from "@/pages/Home";
+import SingleTour from "@/components/modules/tours/SingleTour";
+import Tours from "@/pages/Tours";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +29,14 @@ const router = createBrowserRouter([
         path: "about",
         Component: About,
       },
+      {
+        path: "tours",
+        Component: Tours
+      },
+      {
+        path: "tours/:id",
+        Component: SingleTour
+      }
     ],
   },
   {
