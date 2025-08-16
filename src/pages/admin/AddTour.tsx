@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import DatePickerForm from "@/components/DatePickerForm";
 import DynamicInput from "@/components/DynamicInput";
 import MultipleImageUpload from "@/components/MultiImageUpload";
@@ -35,13 +36,14 @@ import { Textarea } from "@/components/ui/textarea";
 import type { FileMetadata } from "@/hooks/use-file-upload";
 import { cn } from "@/lib/utils";
 import { useGetDivisionQuery } from "@/redux/features/division/division.api";
-import { useGetTourTypeQuery } from "@/redux/features/tour/tour.api";
+import { useAddTourMutation, useGetTourTypeQuery } from "@/redux/features/tour/tour.api";
 import type { IDivision, ITourType } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formatISO } from "date-fns";
 import { Check, ChevronsUpDown, Loader2, Plus } from "lucide-react";
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
 const tourZodSchema = z
@@ -78,7 +80,7 @@ export type TourZodType = z.infer<typeof tourZodSchema>;
 
 const AddTour = () => {
     const [images, setImages] = useState<(File | FileMetadata)[] | []>([]);
-    
+    const [addTour, {isLoading:isAddingTour}] = useAddTourMutation();
   const { data: division, isLoading: divisionLoading } =
     useGetDivisionQuery(undefined);
   const { data: tourType, isLoading: tourTypeLoading } =
@@ -113,7 +115,13 @@ const AddTour = () => {
     tourPlan: useFieldArray({ control: form.control, name: "tourPlan" }),
   };
 
-  const onsubmit = (data: TourZodType) => {
+  const onsubmit = async (data: TourZodType) => {
+    const toastId = toast.loading("Adding Tour");
+
+    if(!images.length) {
+      return toast.error("Add images", { id: toastId });
+    }
+    
        data.startDate= formatISO(data.startDate)
        data.endDate = formatISO(data.endDate)
        data.amenities = !(data.amenities[0] as {value: string}).value ? [] : data.amenities.map(data => data);
@@ -121,8 +129,18 @@ const AddTour = () => {
        data.excluded = !(data.excluded[0] as {value: string}).value ? [] : data.excluded.map(data => data);
        data.tourPlan = !(data.tourPlan[0] as {value: string}).value ? [] : data.excluded.map(data => data);
 
-    console.log(data);
-    console.log(images);
+   const formData = new FormData();
+   formData.append("data", JSON.stringify(data));
+   images.forEach(image => formData.append("files", image as File));
+
+   try {
+    await addTour(formData).unwrap();
+    toast.success("Tour added", {id: toastId});
+    form.reset();
+   } catch (error:any) {
+    toast.error(error?.data?.message || "Failed to add tour", { id: toastId });
+   }
+
   };
 
   const commandArr: [[IDivision], [ITourType]] = [
@@ -440,7 +458,7 @@ const AddTour = () => {
                 </div>
               </div>
 
-              <Button type="submit">Add Tour</Button>
+              <Button type="submit" disabled={isAddingTour}>Add Tour</Button>
             </form>
           </Form>
         </CardContent>

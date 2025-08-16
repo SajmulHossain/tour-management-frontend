@@ -42,6 +42,14 @@ export const tourApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["TOURS"],
     }),
+    addTour: builder.mutation({
+      query: (data) => ({
+        url: `/tour`,
+        method: "POST",
+        data
+      }),
+      invalidatesTags: ["TOURS"],
+    }),
   }),
 });
 
@@ -50,5 +58,6 @@ export const {
   usePostTourTypeMutation,
   useGetAllToursQuery,
   useRemoveTourTypeMutation,
-  useRemoveTourMutation
+  useRemoveTourMutation,
+  useAddTourMutation
 } = tourApi;
