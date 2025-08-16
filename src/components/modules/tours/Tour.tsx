@@ -7,7 +7,6 @@ const Tour = ({ tour }: { tour: ITour }) => {
     title,
     description,
     amenities,
-    slug,
     images,
     arrivalLocation,
     departureLocation,

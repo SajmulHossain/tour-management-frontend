@@ -1,19 +1,18 @@
-import { useGetAllToursQuery } from "@/redux/features/tour/tour.api";
-import Tour from "../components/modules/tours/Tour";
-import type { ITour } from "@/types";
+import Loading from "@/components/Loading";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
-import Loading from "@/components/Loading";
+import { useGetAllToursQuery } from "@/redux/features/tour/tour.api";
+import type { ITour } from "@/types";
+import Tour from "../components/modules/tours/Tour";
+import NoData from "@/components/NoData";
 
 const Tours = () => {
-  const { data, isLoading } = useGetAllToursQuery(undefined);
+  const { data, isLoading, isError } = useGetAllToursQuery({ limit: 100 });
 
   return (
     <section className="section">
@@ -30,10 +29,10 @@ const Tours = () => {
         <div className="col-span-7 md:col-span-9 w-full">
           {isLoading ? (
             <Loading />
+          ) : !isLoading && !isError && !data?.length ? (
+            <NoData />
           ) : (
-            data?.map((tour: ITour) => (
-              <Tour key={tour._id} tour={tour} />
-            ))
+            data?.map((tour: ITour) => <Tour key={tour._id} tour={tour} />)
           )}
         </div>
       </div>
