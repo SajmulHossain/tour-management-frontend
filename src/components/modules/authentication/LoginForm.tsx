@@ -16,10 +16,11 @@ import { useLoginMutation } from "@/redux/features/auth/auth.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { HtmlHTMLAttributes } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import z from "zod";
 import LoginWithGoogle from "./LoginWithGoogle";
+
 
 const loginSchema = z.object({
   email: z.email(),
@@ -43,6 +44,7 @@ const LoginForm = ({
 }: HtmlHTMLAttributes<HTMLDivElement>) => {
   const [login] = useLoginMutation();
   const navigate = useNavigate();
+    const { state } = useLocation();
 
   const form = useForm({
     resolver: zodResolver(loginSchema),
@@ -57,7 +59,7 @@ const LoginForm = ({
       const response = await login(data).unwrap();
       navigate("/");
       toast.success(response?.message || 'Login Successfull');
-      navigate('/')
+      navigate(state || "/")
     } catch (error: any) {
       if (error.data.message === "User is not verified") {
         navigate("/verify", {

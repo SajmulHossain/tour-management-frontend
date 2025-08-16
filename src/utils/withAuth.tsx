@@ -9,7 +9,7 @@ export const withAuth = (Component: ComponentType, requiredRole?: TRole) => {
     const { pathname } = useLocation();
 
     if (!isLoading && !data?.data?.email) {
-      return <Navigate to="/login" />;
+      return <Navigate to="/login" state={pathname} />;
     }
 
     if (requiredRole && !isLoading && requiredRole !== data?.data?.role) {
