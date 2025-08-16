@@ -236,7 +236,7 @@ const AddTour = () => {
                                       onSelect={() => {
                                         form.setValue(
                                           index === 0 ? "division" : "tourType",
-                                          value.name
+                                          value._id
                                         );
                                       }}
                                     >
