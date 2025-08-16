@@ -124,10 +124,10 @@ const AddTour = () => {
     
        data.startDate= formatISO(data.startDate)
        data.endDate = formatISO(data.endDate)
-       data.amenities = !(data.amenities[0] as {value: string}).value ? [] : data.amenities.map(data => data);
-       data.included = !(data.included[0] as {value: string}).value ? [] : data.included.map(data => data);
-       data.excluded = !(data.excluded[0] as {value: string}).value ? [] : data.excluded.map(data => data);
-       data.tourPlan = !(data.tourPlan[0] as {value: string}).value ? [] : data.excluded.map(data => data);
+       data.amenities = !(data.amenities[0] as {value: string})?.value ? [] : (data.amenities as { value: string }[]).map((data) => data.value);
+       data.included = !(data.included[0] as {value: string})?.value ? [] : (data.included as { value: string }[]).map((data) => data.value);
+       data.excluded = !(data.excluded[0] as {value: string})?.value ? [] : (data.excluded as { value: string }[]).map((data) => data.value);
+       data.tourPlan = !(data.tourPlan[0] as {value: string})?.value ? [] : (data.excluded as { value: string }[]).map((data) => data.value);
 
    const formData = new FormData();
    formData.append("data", JSON.stringify(data));
@@ -137,6 +137,7 @@ const AddTour = () => {
     await addTour(formData).unwrap();
     toast.success("Tour added", {id: toastId});
     form.reset();
+    setImages([]);
    } catch (error:any) {
     toast.error(error?.data?.message || "Failed to add tour", { id: toastId });
    }
@@ -435,15 +436,14 @@ const AddTour = () => {
 
               <div className="flex flex-col md:flex-row gap-4">
                 <FormField
-                  name="costFrom"
+                  name="description"
                   control={form.control}
                   render={({ field }) => (
                     <FormItem className="flex-1">
-                      <FormLabel>Cost</FormLabel>
+                      <FormLabel>Description</FormLabel>
                       <FormControl>
                         <Textarea {...field}
                           placeholder="Tour Description"
-                          className="flex-1"
                         />
                       </FormControl>
                       <FormDescription className="sr-only">
