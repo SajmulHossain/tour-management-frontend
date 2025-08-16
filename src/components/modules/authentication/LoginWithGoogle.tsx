@@ -5,7 +5,7 @@ const LoginWithGoogle = () => {
   return (
     <Button
       onClick={() => {
-        window.open(`${envVars.baseUrl}/auth/google`);
+        window.location.href = `${envVars.baseUrl}/auth/google`;
       }}
       type="button"
       variant="outline"

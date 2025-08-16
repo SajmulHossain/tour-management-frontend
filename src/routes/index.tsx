@@ -15,6 +15,10 @@ import { userSidebarItems } from "./userSidebarItems";
 import Home from "@/pages/Home";
 import TourDetails from "@/components/modules/tours/TourDetails";
 import Tours from "@/pages/Tours";
+import Booking from "@/pages/Booking";
+import Payment from "@/pages/payment/Payment";
+import PaymentSuccess from "@/pages/payment/PaymentSuccess";
+import PaymentFailed from "@/pages/payment/PaymentFailed";
 
 const router = createBrowserRouter([
   {
@@ -23,7 +27,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        Component: Home
+        Component: Home,
       },
       {
         path: "about",
@@ -31,12 +35,34 @@ const router = createBrowserRouter([
       },
       {
         path: "tours",
-        Component: Tours
+        Component: Tours,
       },
       {
         path: "tours/:id",
-        Component: TourDetails
-      }
+        Component: TourDetails,
+      },
+      {
+        path: "booking/:id",
+        Component: Booking,
+      },
+      {
+        path: "/payment",
+        Component: Payment,
+        children: [
+          {
+            path: "success",
+            Component: PaymentSuccess,
+          },
+          {
+            path: "fail",
+            Component: PaymentFailed,
+          },
+          {
+            path: "cancel",
+            Component: PaymentFailed,
+          },
+        ],
+      },
     ],
   },
   {
