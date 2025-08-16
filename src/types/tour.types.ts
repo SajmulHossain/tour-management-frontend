@@ -21,6 +21,7 @@ export interface ITour {
   createdAt: string;
   updatedAt: string;
   slug: string;
+  costFrom: number;
 }
 
 export interface ITourType {

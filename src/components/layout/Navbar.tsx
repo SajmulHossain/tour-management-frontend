@@ -87,7 +87,7 @@ export default function Navbar() {
                   {navigationLinks.map((link, index) => (
                     <>
                       {link.role === "PUBLIC" && (
-                        <NavigationMenuItem key={index}>
+                        <NavigationMenuItem key={index} className="w-full">
                           <NavigationMenuLink
                             asChild
                             className="text-muted-foreground hover:text-primary py-1.5 font-medium"
@@ -97,7 +97,7 @@ export default function Navbar() {
                         </NavigationMenuItem>
                       )}
                       {link.role === data?.data?.role && (
-                        <NavigationMenuItem key={index}>
+                        <NavigationMenuItem key={index} className="w-full">
                           <NavigationMenuLink
                             asChild
                             className="text-muted-foreground hover:text-primary py-1.5 font-medium"

@@ -7,31 +7,21 @@ const Tour = ({ tour }: { tour: ITour }) => {
     title,
     description,
     amenities,
-    tourType,
-    startDate,
     slug,
     images,
     arrivalLocation,
     departureLocation,
-    division,
-    excluded,
-    endDate,
-    location,
     maxGuest,
     tourPlan,
     minAge,
-    included,
     costFrom,
     _id,
   } = tour || {};
-  console.log(tour);
 
   return (
-    <div
-      key={slug}
-      className="border border-muted rounded-lg shadow-md overflow-hidden mb-6 flex"
+    <div className="border border-muted rounded-lg shadow-md overflow-hidden mb-6 flex flex-col md:flex-row"
     >
-      <div className="w-2/5 bg-red-500 flex-shrink-0">
+      <div className="w-full md:w-2/5 bg-red-500 flex-shrink-0">
         <img
           src={images[0]}
           alt={title}
