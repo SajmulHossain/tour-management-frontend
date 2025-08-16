@@ -17,7 +17,7 @@ const Tours = () => {
   return (
     <section className="section">
       <div className="grid grid-cols-12 gap-4 relative">
-        <Card className="col-span-5 md:col-span-3 h-fit sticky top-0">
+        <Card className="col-span-5 md:col-span-3 h-fit sticky top-6">
           <CardHeader>
             <CardTitle>Filter</CardTitle>
             <CardDescription>Filter your tour</CardDescription>

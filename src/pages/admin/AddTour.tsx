@@ -80,6 +80,7 @@ export type TourZodType = z.infer<typeof tourZodSchema>;
 
 const AddTour = () => {
     const [images, setImages] = useState<(File | FileMetadata)[] | []>([]);
+
     const [addTour, {isLoading:isAddingTour}] = useAddTourMutation();
   const { data: division, isLoading: divisionLoading } =
     useGetDivisionQuery(undefined);
@@ -127,7 +128,7 @@ const AddTour = () => {
        data.amenities = !(data.amenities[0] as {value: string})?.value ? [] : (data.amenities as { value: string }[]).map((data) => data.value);
        data.included = !(data.included[0] as {value: string})?.value ? [] : (data.included as { value: string }[]).map((data) => data.value);
        data.excluded = !(data.excluded[0] as {value: string})?.value ? [] : (data.excluded as { value: string }[]).map((data) => data.value);
-       data.tourPlan = !(data.tourPlan[0] as {value: string})?.value ? [] : (data.excluded as { value: string }[]).map((data) => data.value);
+       data.tourPlan = !(data.tourPlan[0] as {value: string})?.value ? [] : (data.tourPlan as { value: string }[]).map((data) => data.value);
 
    const formData = new FormData();
    formData.append("data", JSON.stringify(data));
@@ -137,7 +138,6 @@ const AddTour = () => {
     await addTour(formData).unwrap();
     toast.success("Tour added", {id: toastId});
     form.reset();
-    setImages([]);
    } catch (error:any) {
     toast.error(error?.data?.message || "Failed to add tour", { id: toastId });
    }
@@ -442,9 +442,7 @@ const AddTour = () => {
                     <FormItem className="flex-1">
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <Textarea {...field}
-                          placeholder="Tour Description"
-                        />
+                        <Textarea {...field} placeholder="Tour Description" />
                       </FormControl>
                       <FormDescription className="sr-only">
                         This is your public display name.
@@ -454,11 +452,15 @@ const AddTour = () => {
                   )}
                 />
                 <div className="flex-1">
-                  <MultipleImageUpload onChange={setImages} />
+                  <MultipleImageUpload
+                    onChange={setImages}
+                  />
                 </div>
               </div>
 
-              <Button type="submit" disabled={isAddingTour}>Add Tour</Button>
+              <Button type="submit" disabled={isAddingTour}>
+                Add Tour
+              </Button>
             </form>
           </Form>
         </CardContent>

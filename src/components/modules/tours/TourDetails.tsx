@@ -15,7 +15,7 @@ import { toast } from "sonner";
 
 const TourDetails = () => {
   const { id } = useParams();
-  const { data, isLoading } = useGetAllToursQuery({ _id: id });
+  const { data, isLoading, isError } = useGetAllToursQuery({ _id: id });
   const [removeTour, { isLoading: isRemoving }] = useRemoveTourMutation();
   const { role, isLoading: roling } = useRole();
   const navigate = useNavigate();
@@ -56,6 +56,10 @@ const TourDetails = () => {
 
   if (isLoading) {
     return <Loading />;
+  }
+
+  if(isError) {
+    return <div>Error</div>
   }
   return (
     <section className="section">
@@ -128,57 +132,65 @@ const TourDetails = () => {
 
       {/* Amenities & Inclusions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-        <div>
-          <h3 className="text-lg font-semibold mb-3">Amenities</h3>
-          <ul className="space-y-1">
-            {amenities?.map((amenity, index) => (
-              <li key={index} className="flex items-center">
-                <span className="text-green-500 mr-2">✓</span>
-                {amenity}
-              </li>
-            ))}
-          </ul>
-        </div>
+        {amenities?.length as number > 0 && (
+          <div>
+            <h3 className="text-lg font-semibold mb-3">Amenities</h3>
+            <ul className="space-y-1">
+              {amenities?.map((amenity, index) => (
+                <li key={index} className="flex items-center">
+                  <span className="text-green-500 mr-2">✓</span>
+                  {amenity}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
-        <div>
-          <h3 className="text-lg font-semibold mb-3">Included</h3>
-          <ul className="space-y-1">
-            {included?.map((item, index) => (
-              <li key={index} className="flex items-center">
-                <span className="text-green-500 mr-2">✓</span>
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
+        {(included?.length as number) > 0 && (
+          <div>
+            <h3 className="text-lg font-semibold mb-3">Included</h3>
+            <ul className="space-y-1">
+              {included?.map((item, index) => (
+                <li key={index} className="flex items-center">
+                  <span className="text-green-500 mr-2">✓</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
-        <div>
-          <h3 className="text-lg font-semibold mb-3">Excluded</h3>
-          <ul className="space-y-1">
-            {excluded?.map((item, index) => (
-              <li key={index} className="flex items-center">
-                <span className="text-red-500 mr-2">✗</span>
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
+        {(excluded?.length as number) > 0 && (
+          <div>
+            <h3 className="text-lg font-semibold mb-3">Excluded</h3>
+            <ul className="space-y-1">
+              {excluded?.map((item, index) => (
+                <li key={index} className="flex items-center">
+                  <span className="text-red-500 mr-2">✗</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
 
       {/* Tour Plan */}
-      <div className="mb-8">
-        <h3 className="text-lg font-semibold mb-3">Tour Plan</h3>
-        <ol className="space-y-2">
-          {tourPlan?.map((plan, index) => (
-            <li key={index} className="flex">
-              <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-3 mt-0.5">
-                {index + 1}
-              </span>
-              {plan}
-            </li>
-          ))}
-        </ol>
-      </div>
+      {(tourPlan?.length as number) > 0 && (
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold mb-3">Tour Plan</h3>
+          <ol className="space-y-2">
+            {tourPlan?.map((plan, index) => (
+              <li key={index} className="flex">
+                <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-3 mt-0.5">
+                  {index + 1}
+                </span>
+                {plan}
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
     </section>
   );
 };

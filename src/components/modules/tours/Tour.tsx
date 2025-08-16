@@ -29,7 +29,7 @@ const Tour = ({ tour }: { tour: ITour }) => {
       </div>
       <div className="p-6 flex-1">
         <h3 className="text-xl font-semibold mb-2">{title}</h3>
-        <p className="text-muted-foreground mb-3">{description}</p>
+        <p className="text-muted-foreground mb-3 whitespace-pre-line">{description}</p>
 
         <div className="flex -center justify-between mb-3">
           <span className="text-xl font-bold text-primary">
@@ -57,7 +57,7 @@ const Tour = ({ tour }: { tour: ITour }) => {
         </div>
 
         <div className="flex flex-wrap gap-2 mb-4">
-          {amenities.slice(0, 3).map((amenity, index) => (
+          {amenities.length && amenities.slice(0, 3).map((amenity, index) => (
             <span
               key={index}
               className="px-2 py-1 bg-muted/50 text-primary text-xs rounded-full"

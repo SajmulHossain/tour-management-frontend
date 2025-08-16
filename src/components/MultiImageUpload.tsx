@@ -1,11 +1,11 @@
-import { AlertCircleIcon, ImageIcon, UploadIcon, XIcon } from "lucide-react"
+import { AlertCircleIcon, ImageIcon, UploadIcon, XIcon } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import {
   formatBytes,
   useFileUpload,
   type FileMetadata,
-} from "@/hooks/use-file-upload"
-import { Button } from "@/components/ui/button"
+} from "@/hooks/use-file-upload";
 import { useEffect } from "react";
 
 export default function MultipleImageUpload({
@@ -72,7 +72,12 @@ export default function MultipleImageUpload({
           <p className="text-muted-foreground text-xs">
             SVG, PNG, JPG or GIF (max. {maxSizeMB}MB)
           </p>
-          <Button type="button" variant="outline" className="mt-4" onClick={openFileDialog}>
+          <Button
+            type="button"
+            variant="outline"
+            className="mt-4"
+            onClick={openFileDialog}
+          >
             <UploadIcon className="-ms-1 opacity-60" aria-hidden="true" />
             Select images
           </Button>
@@ -116,7 +121,7 @@ export default function MultipleImageUpload({
               </div>
 
               <Button
-              type="button"
+                type="button"
                 size="icon"
                 variant="ghost"
                 className="text-muted-foreground/80 hover:text-foreground -me-2 size-8 hover:bg-transparent"
