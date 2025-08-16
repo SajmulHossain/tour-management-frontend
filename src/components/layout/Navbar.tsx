@@ -36,8 +36,8 @@ export default function Navbar() {
 
   const { data } = useGetMeQuery(undefined);
 
-  const handleLogout = () => {
-    logout(null);
+  const handleLogout = async () => {
+    await logout(null);
     dispatch(authApi.util.resetApiState());
   };
 
