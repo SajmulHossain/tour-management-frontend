@@ -1,6 +1,7 @@
 import Loading from "@/components/Loading";
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
@@ -22,6 +23,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetDivisionQuery } from "@/redux/features/division/division.api";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 const Tours = () => {
     const [selectDivision, setSelectDivision] = useState<string | undefined>(undefined);
@@ -34,6 +36,11 @@ const Tours = () => {
   const { data: tourTypes, isLoading: tourTypeLoading } = useGetTourTypeQuery(undefined);
   const { data: divisions, isLoading:isDivisionLoading } = useGetDivisionQuery(undefined);
 
+  const handleClearFilter = () => {
+    setSelectDivision(undefined);
+    setSelectTourType(undefined);
+  }
+
   return (
     <section className="section">
       <div className="grid grid-cols-12 gap-4 relative">
@@ -41,6 +48,9 @@ const Tours = () => {
           <CardHeader>
             <CardTitle>Filter</CardTitle>
             <CardDescription>Filter your tour</CardDescription>
+            <CardAction>
+              <Button size={"sm"} variant={"outline"} onClick={handleClearFilter}>Clear</Button>
+            </CardAction>
           </CardHeader>
           <CardContent className="space-y-3">
             {isDivisionLoading ? (
