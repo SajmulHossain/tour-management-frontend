@@ -109,6 +109,7 @@ const TourDetails = () => {
               <strong>Dates:</strong>{" "}
               {format(new Date(startDate ? startDate : new Date()), "PP")} -{" "}
               {format(new Date(endDate ? endDate : new Date()), "PP")}
+              {/* {formatDistanceStrict(startDate || new Date(), endDate || new Date())} */}
             </p>
             <p>
               <strong>Departure:</strong> {departureLocation}

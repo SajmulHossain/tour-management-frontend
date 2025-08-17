@@ -57,7 +57,6 @@ const LoginForm = ({
   const handleLogin = async (data: z.infer<typeof loginSchema>) => {
     try {
       const response = await login(data).unwrap();
-      navigate("/");
       toast.success(response?.message || 'Login Successfull');
       navigate(state || "/")
     } catch (error: any) {

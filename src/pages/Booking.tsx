@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { useAddBookingMutation } from "@/redux/features/booking/booking.api";
 import { useGetAllToursQuery } from "@/redux/features/tour/tour.api";
+import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { toast } from "sonner";
@@ -60,7 +61,7 @@ const Booking = () => {
         </div>
       )}
 
-      {!isLoading && !isError && data?.length as number > 0 && (
+      {!isLoading && !isError && (data?.length as number) > 0 && (
         <>
           {/* Left Section - Tour Summary */}
           <div className="flex-1 space-y-6">
@@ -81,8 +82,9 @@ const Booking = () => {
                   <strong>Location:</strong> {tourData?.location}
                 </div>
                 <div>
-                  <strong>Duration:</strong> {tourData?.startDate} to{" "}
-                  {tourData?.endDate}
+                  <strong>Duration:</strong>{" "}
+                  {format(new Date(tourData?.startDate ? tourData?.startDate : new Date()), "PP")} -{" "}
+                  {format(new Date(tourData?.endDate ? tourData?.endDate : new Date()), "PP")}
                 </div>
                 <div>
                   {/* <strong>Tour Type:</strong> {tourData?.tourType} */}
@@ -158,7 +160,12 @@ const Booking = () => {
                   </div>
                 </div>
 
-                <Button onClick={handleBooking} disabled={isBooking} className="w-full" size="lg">
+                <Button
+                  onClick={handleBooking}
+                  disabled={isBooking}
+                  className="w-full"
+                  size="lg"
+                >
                   Book Now
                 </Button>
               </div>
