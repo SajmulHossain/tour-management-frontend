@@ -5,6 +5,7 @@ import { useGetAllToursQuery } from "@/redux/features/tour/tour.api";
 import type { ITour } from "@/types";
 import { useSearchParams } from "react-router";
 import Tour from "../components/modules/tours/Tour";
+import PaginationComponent from "@/components/Pagination";
 
 const Tours = () => {
     const [searchParams] = useSearchParams();
@@ -29,6 +30,7 @@ const Tours = () => {
           ) : (
             data?.map((tour: ITour) => <Tour key={tour._id} tour={tour} />)
           )}
+        <PaginationComponent />
         </div>
       </div>
     </section>
