@@ -24,8 +24,8 @@ import { useSearchParams } from "react-router";
 const ToursFilter = () => {
     const [searchParams, setSearchParams] = useSearchParams();
 
- const selectedDivision = searchParams.get("division") || "";
- const selectedTourType = searchParams.get("tourType") || "";
+    const selectedDivision = searchParams.get("division") || "";
+    const selectedTourType = searchParams.get("tourType") || "";
 
       const { data: tourTypes, isLoading: tourTypeLoading } = useGetTourTypeQuery(undefined);
       const { data: divisions, isLoading:isDivisionLoading } = useGetDivisionQuery(undefined);
@@ -64,7 +64,7 @@ const ToursFilter = () => {
           <Skeleton className="h-8" />
         ) : (
           <Select value={selectedDivision} onValueChange={handleDivisionChange}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Select a division" />
             </SelectTrigger>
             <SelectContent>
@@ -83,7 +83,7 @@ const ToursFilter = () => {
           <Skeleton className="h-8" />
         ) : (
           <Select value={selectedTourType} onValueChange={handleTourTypeChange}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Select a tour type" />
             </SelectTrigger>
             <SelectContent>

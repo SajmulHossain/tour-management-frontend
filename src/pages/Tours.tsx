@@ -3,17 +3,18 @@ import ToursFilter from "@/components/modules/tours/ToursFilter";
 import NoData from "@/components/NoData";
 import { useGetAllToursQuery } from "@/redux/features/tour/tour.api";
 import type { ITour } from "@/types";
-import { useState } from "react";
+import { useSearchParams } from "react-router";
 import Tour from "../components/modules/tours/Tour";
 
 const Tours = () => {
-    const [selectDivision, setSelectDivision] = useState<string | undefined>(undefined);
-    
-    const [selectTourType, setSelectTourType] = useState<string | undefined>(undefined);
+    const [searchParams] = useSearchParams();
+
+     const division = searchParams.get("division") || undefined;
+     const tourType = searchParams.get("tourType") || undefined;
     
 
     
-  const { data, isLoading, isError } = useGetAllToursQuery({division: selectDivision, tourType: selectTourType});
+  const { data, isLoading, isError } = useGetAllToursQuery({division, tourType});
 
 
   return (
