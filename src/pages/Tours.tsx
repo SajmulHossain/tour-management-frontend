@@ -15,7 +15,9 @@ const Tours = () => {
      const division = searchParams.get("division") || undefined;
      const tourType = searchParams.get("tourType") || undefined;
     
-     const { data, isLoading, isError } = useGetAllToursQuery({division, tourType, limit: 1, page: currentPage});
+     const { data, isLoading, isError } = useGetAllToursQuery({division, tourType, page: currentPage});
+
+     const totalPage = data?.meta?.totalPage || 1;
 
   return (
     <section className="section">
@@ -31,7 +33,13 @@ const Tours = () => {
               <Tour key={tour._id} tour={tour} />
             ))
           )}
-          <PaginationComponent onPageChange={setCurrentPage} page={data?.meta?.totalPage || 0} />
+          {totalPage > 1 && (
+            <PaginationComponent
+              onPageChange={setCurrentPage}
+              totalPage={totalPage}
+              currentPage={currentPage}
+            />
+          )}
         </div>
       </div>
     </section>
