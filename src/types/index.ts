@@ -9,6 +9,12 @@ export interface IResponse<T> {
   success: true;
   message: string;
   data: T;
+  meta?: {
+    page: number;
+    limit: number;
+    totalPage: number;
+    total: number;
+  };
 }
 
 export interface ISidebarItem {

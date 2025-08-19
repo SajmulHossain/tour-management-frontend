@@ -7,7 +7,7 @@ export const tourApi = baseApi.injectEndpoints({
       query: (params) => ({
         url: "/tour/tour-types",
         method: "GET",
-        params
+        params,
       }),
       transformResponse: (response) => response.data,
       providesTags: ["TOUR_TYPE"],
@@ -27,14 +27,22 @@ export const tourApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["TOUR_TYPE"],
     }),
-    getAllTours: builder.query<ITour[], unknown>({
+    getAllTours: builder.query<{data:ITour[], meta: IResponse<ITour>["meta"]}, unknown
+    >({
       query: (params) => ({
         url: "/tour",
         method: "GET",
         params,
       }),
       providesTags: ["TOURS"],
-      transformResponse: (response: IResponse<ITour[]>) => response.data,
+      transformResponse: (
+        response: IResponse<ITour[]>
+      ) => {
+        return {
+          data: response.data,
+          meta: response.meta
+        }
+      },
     }),
     removeTour: builder.mutation({
       query: (id) => ({
@@ -47,7 +55,7 @@ export const tourApi = baseApi.injectEndpoints({
       query: (data) => ({
         url: `/tour`,
         method: "POST",
-        data
+        data,
       }),
       invalidatesTags: ["TOURS"],
     }),
