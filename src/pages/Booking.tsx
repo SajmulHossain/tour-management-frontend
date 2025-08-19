@@ -14,7 +14,7 @@ const Booking = () => {
     const [guestCount, setGuestCount] = useState(1);
     const [totalAmount, setTotalAmount] = useState(0);
     
-    const tourData = data?.[0];
+    const tourData = data?.data?.[0];
 
       const incrementGuest = () => {
         setGuestCount((prv) => prv + 1);
@@ -55,13 +55,13 @@ const Booking = () => {
         </div>
       )}
 
-      {!isLoading && data?.length === 0 && (
+      {!isLoading && data?.data?.length === 0 && (
         <div>
           <p>No Data Found</p>{" "}
         </div>
       )}
 
-      {!isLoading && !isError && (data?.length as number) > 0 && (
+      {!isLoading && !isError && (data?.data?.length as number) > 0 && (
         <>
           {/* Left Section - Tour Summary */}
           <div className="flex-1 space-y-6">

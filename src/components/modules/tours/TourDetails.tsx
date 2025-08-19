@@ -52,7 +52,7 @@ const TourDetails = () => {
     included,
     costFrom,
     _id,
-  } = data?.[0] || {};
+  } = data?.data?.[0] || {};
 
   if (isLoading) {
     return <Loading />;
