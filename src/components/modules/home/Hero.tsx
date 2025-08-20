@@ -25,10 +25,10 @@ interface Hero1Props {
   };
 }
 
-const Hero1 = ({
-  badge = "✨ Your Website Builder",
-  heading = "Blocks Built With Shadcn & Tailwind",
-  description = "Finely crafted components built with React, Tailwind and Shadcn UI. Developers can copy and paste these blocks directly into their project.",
+const Hero = ({
+  badge = "✨ Your Travel Helper",
+  heading = "Travel where you want with us",
+  description = "We are eager to guide you to visit any place in Bangladesh",
   buttons = {
     primary: {
       text: "Discover all Tours",
@@ -36,7 +36,7 @@ const Hero1 = ({
     },
     secondary: {
       text: "View on GitHub",
-      url: "https://www.shadcnblocks.com",
+      url: "https://github.com/SajmulHossain",
     },
   },
   image = {
@@ -88,4 +88,4 @@ const Hero1 = ({
   );
 };
 
-export default Hero1;
+export default Hero;
