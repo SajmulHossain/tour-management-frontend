@@ -33,7 +33,7 @@ const AddTourTypeZodSchema = z.object({
 });
 
 const AddTourModal = () => {
-  const [postTourType] = usePostTourTypeMutation();
+  const [postTourType, { isLoading }] = usePostTourTypeMutation();
   const [isOpenForm, setIsOpenForm] = useState<boolean>(false);
 
   const form = useForm({
@@ -96,7 +96,7 @@ const AddTourModal = () => {
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button type="submit" form="add-tour-type-form">
+            <Button type="submit" disabled={ isLoading } form="add-tour-type-form">
               Add Tour
             </Button>
           </DialogFooter>
