@@ -28,8 +28,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     navMain: getSidebarItems(userInfo?.data?.role),
   };
 
-  const handleLogout = () => {
-    logout(null);
+  const handleLogout =  async () => {
+    await logout(null);
     dispatch(authApi.util.resetApiState());
   }
   
