@@ -36,13 +36,13 @@ const TourDetails = () => {
     title,
     description,
     amenities,
-    // tourType,
+    tourType,
     startDate,
     //   slug,
     images,
     arrivalLocation,
     departureLocation,
-    //   division,
+      division,
     excluded,
     endDate,
     location,
@@ -117,8 +117,8 @@ const TourDetails = () => {
             <p>
               <strong>Arrival:</strong> {arrivalLocation}
             </p>
-            <p>{/* <strong>Division:</strong> {divisionData?.[0]?.name} */}</p>
-            <p>{/* <strong>Tour Type:</strong> {tourType} */}</p>
+            <p><strong>Division:</strong> {division?.name}</p>
+            <p><strong>Tour Type:</strong> {tourType?.name}</p>
             <p>
               <strong>Min Age:</strong> {minAge} years
             </p>
